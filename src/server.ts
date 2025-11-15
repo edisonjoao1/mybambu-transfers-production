@@ -1424,7 +1424,7 @@ function createTransfersServer(): Server {
       },
       {
         name: "get_exchange_rate",
-        description: "Use this when the user wants to check the current exchange rate between USD and another currency. Provides live rates updated hourly with fee information and estimated delivery times.",
+        description: "Get current exchange rate, check conversion rate, see how much currency you'll get, or compare rates. Use when user asks 'what's the exchange rate', 'how much is X in Y', 'rate for [currency]', 'USD to [currency]', 'exchange rate', 'conversion rate', 'how much will they receive', 'what's the rate', or wants to see rates for all countries/currencies. Provides live rates updated hourly with fee information and estimated delivery times.",
         inputSchema: {
           type: "object",
           properties: {
@@ -1450,7 +1450,7 @@ function createTransfersServer(): Server {
       },
       {
         name: "check_transfer_status",
-        description: "Use this when the user wants to check the status of a specific transfer by transfer ID. Returns current status, delivery progress, and estimated arrival time.",
+        description: "Check status, track transfer, verify delivery, or get updates on any transfer. Use when user asks 'check the transfer status', 'where is my money', 'has it arrived', 'track my transfer', 'check transfer', 'status of transfer', or similar status inquiries. Returns current status, delivery progress, and estimated arrival time.",
         inputSchema: {
           type: "object",
           properties: {
@@ -1472,7 +1472,7 @@ function createTransfersServer(): Server {
       },
       {
         name: "get_transfer_history",
-        description: "Use this when the user wants to view their past transfers. Shows all transfers with their status, amounts, recipients, and dates.",
+        description: "View transfer history, see past transfers, show all transfers, get transaction list, or check previous payments. Use when user asks 'show my history', 'what transfers did I make', 'list my transfers', 'transfer history', 'past transactions', 'what did I send', 'show all transfers', or wants to see a log/list of their transfers. Shows all transfers with their status, amounts, recipients, and dates.",
         inputSchema: {
           type: "object",
           properties: {
@@ -1493,7 +1493,7 @@ function createTransfersServer(): Server {
       },
       {
         name: "get_supported_countries",
-        description: "Use this when the user asks which countries MyBambu supports for money transfers. Returns a comprehensive list of 90+ supported countries across 6 continents with delivery times, currencies, and regional groupings.",
+        description: "Get list of supported countries, check where you can send money, see available destinations, or verify country support. Use when user asks 'what countries', 'which countries', 'where can I send', 'supported countries', 'available countries', 'what destinations', 'can I send to [country]', 'list countries', or any question about country availability. Returns a comprehensive list of 90+ supported countries across 6 continents with delivery times, currencies, and regional groupings.",
         inputSchema: {
           type: "object",
           properties: {
@@ -1898,6 +1898,9 @@ function createTransfersServer(): Server {
         structuredContent: {
           transfers: allTransfers,
           total: allTransfers.length
+        },
+        _meta: {
+          "openai/outputTemplate": "component://transfer-history"
         }
       };
     }
@@ -1998,6 +2001,7 @@ function createTransfersServer(): Server {
         }],
         structuredContent: recipient,
         _meta: {
+          "openai/outputTemplate": "component://recipient-management",
           recipientId,
           totalRecipients: recipients.size,
           supportedCurrency: corridor.currency
@@ -2074,6 +2078,9 @@ function createTransfersServer(): Server {
           recipientId: recipient_id,
           recipientName,
           remainingRecipients: recipients.size
+        },
+        _meta: {
+          "openai/outputTemplate": "component://recipient-management"
         }
       };
     }
@@ -2161,6 +2168,7 @@ function createTransfersServer(): Server {
         }],
         structuredContent: scheduledTransfer,
         _meta: {
+          "openai/outputTemplate": "component://scheduled-transfers",
           scheduleId,
           nextExecutionDates: nextDates,
           totalScheduled: scheduledTransfers.size
@@ -2238,6 +2246,9 @@ function createTransfersServer(): Server {
           recipientName: schedule.recipient_name,
           amount: schedule.amount,
           frequency: schedule.frequency
+        },
+        _meta: {
+          "openai/outputTemplate": "component://scheduled-transfers"
         }
       };
     }
