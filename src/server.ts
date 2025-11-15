@@ -2233,8 +2233,12 @@ async function handleSseRequest(res: ServerResponse) {
   sessions.set(sessionId, { server, transport });
 
   transport.onclose = async () => {
-    sessions.delete(sessionId);
-    await server.close();
+    const session = sessions.get(sessionId);
+    if (session) {
+      sessions.delete(sessionId);
+      // Don't call server.close() here - it creates circular reference
+      // The transport is already closing, just clean up the session
+    }
   };
 
   transport.onerror = (error) => console.error("SSE transport error", error);
