@@ -1666,10 +1666,25 @@ function createTransfersServer(): Server {
 
     // TOOL: send_money
     if (toolName === "send_money") {
-      const { amount, to_country, recipient_name } = args as any;
+      const rawArgs = args as any;
 
-      // Validation
-      if (amount <= 0) {
+      // Accept both parameter naming conventions
+      const amount = rawArgs.amount;
+      const to_country = rawArgs.to_country || rawArgs.recipient_country;
+      const recipient_name = rawArgs.recipient_name;
+
+      // Validation - Check required parameters
+      if (!to_country || !recipient_name) {
+        return {
+          content: [{
+            type: "text",
+            text: "❌ Please provide the destination country and recipient name. Example: Send $100 to Maria in Colombia"
+          }],
+          isError: true
+        };
+      }
+
+      if (!amount || amount <= 0) {
         return {
           content: [{
             type: "text",
