@@ -2297,6 +2297,40 @@ const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse
     return;
   }
 
+  // Health check endpoint for Render/Railway
+  if (req.method === "GET" && url.pathname === "/health") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      status: "healthy",
+      service: "mybambu-transfers",
+      version: "1.0.0",
+      timestamp: new Date().toISOString()
+    }));
+    return;
+  }
+
+  // Root endpoint
+  if (req.method === "GET" && url.pathname === "/") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      service: "MyBambu Transfers MCP Server",
+      version: "1.0.0",
+      endpoints: {
+        sse: ssePath,
+        post: postPath,
+        health: "/health"
+      },
+      features: [
+        "Send money to 90+ countries",
+        "Live exchange rates",
+        "Recipient management",
+        "Scheduled transfers",
+        "Interactive widgets"
+      ]
+    }));
+    return;
+  }
+
   if (req.method === "GET" && url.pathname === ssePath) {
     await handleSseRequest(res);
     return;
