@@ -1771,7 +1771,7 @@ function createTransfersServer(): Server {
 
       transfers.set(transferId, transfer);
 
-      // Return structured response
+      // Return structured response with widget
       return {
         content: [{
           type: "text",
@@ -1779,6 +1779,7 @@ function createTransfersServer(): Server {
         }],
         structuredContent: transfer,
         _meta: {
+          "openai/outputTemplate": "component://transfer-receipt",
           mybambuResponse,
           feeBreakdown: {
             baseAmount: amount,
@@ -1830,6 +1831,7 @@ function createTransfersServer(): Server {
         }],
         structuredContent: responseData,
         _meta: {
+          "openai/outputTemplate": "component://exchange-rate",
           rawRateData: rateData,
           corridor
         }
@@ -1866,6 +1868,7 @@ function createTransfersServer(): Server {
         }],
         structuredContent: transfer,
         _meta: {
+          "openai/outputTemplate": "component://transfer-receipt",
           statusHistory: [
             { status: 'pending', timestamp: transfer.created_at },
             { status: transfer.status, timestamp: new Date().toISOString() }
@@ -2016,6 +2019,9 @@ function createTransfersServer(): Server {
           structuredContent: {
             recipients: [],
             total: 0
+          },
+          _meta: {
+            "openai/outputTemplate": "component://recipient-management"
           }
         };
       }
@@ -2032,6 +2038,9 @@ function createTransfersServer(): Server {
         structuredContent: {
           recipients: allRecipients,
           total: allRecipients.length
+        },
+        _meta: {
+          "openai/outputTemplate": "component://recipient-management"
         }
       };
     }
@@ -2174,6 +2183,9 @@ function createTransfersServer(): Server {
           structuredContent: {
             schedules: [],
             total: 0
+          },
+          _meta: {
+            "openai/outputTemplate": "component://scheduled-transfers"
           }
         };
       }
@@ -2189,6 +2201,9 @@ function createTransfersServer(): Server {
         structuredContent: {
           schedules: allScheduled,
           total: allScheduled.length
+        },
+        _meta: {
+          "openai/outputTemplate": "component://scheduled-transfers"
         }
       };
     }
