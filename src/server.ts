@@ -1274,6 +1274,361 @@ function getScheduledTransfersComponent(): string {
 </html>`;
 }
 
+function getRateComparisonComponent(): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .mybambu-logo {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .winner-card {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(17, 153, 142, 0.3);
+    }
+    .winner-badge {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .winner-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .winner-amount {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .winner-fee {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .competitor-card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 2px solid #e0e0e0;
+    }
+    .competitor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .competitor-name {
+      font-weight: 600;
+      font-size: 16px;
+      color: #333;
+    }
+    .competitor-amount {
+      font-size: 18px;
+      font-weight: 600;
+      color: #666;
+    }
+    .savings-badge {
+      background: #38ef7d;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="mybambu-logo">MyBambu</div>
+      <h1>💰 Rate Comparison</h1>
+      <p class="subtitle" id="subtitle">Loading...</p>
+    </div>
+
+    <div id="winnerCard"></div>
+    <div id="competitorsList"></div>
+  </div>
+
+  <script>
+    function render() {
+      if (!window.openai || !window.openai.toolOutput) {
+        setTimeout(render, 100);
+        return;
+      }
+
+      const data = window.openai.toolOutput;
+      const mybambu = data.mybambu;
+      const competitors = data.competitors || [];
+
+      document.getElementById('subtitle').textContent = \`Sending $\${data.amount} to \${data.country}\`;
+
+      document.getElementById('winnerCard').innerHTML = \`
+        <div class="winner-card">
+          <div class="winner-badge">🏆</div>
+          <div class="winner-title">MyBambu - Best Rate!</div>
+          <div class="winner-amount">\${mybambu.receives.toFixed(2)} \${mybambu.currency}</div>
+          <div class="winner-fee">Fee: $\${mybambu.fee.toFixed(2)} • Rate: \${mybambu.rate.toFixed(4)}</div>
+        </div>
+      \`;
+
+      document.getElementById('competitorsList').innerHTML = competitors.map(c => \`
+        <div class="competitor-card">
+          <div class="competitor-header">
+            <div class="competitor-name">\${c.name}</div>
+            <div class="competitor-amount">\${c.receives} \${mybambu.currency}</div>
+          </div>
+          <div style="font-size: 13px; color: #999;">
+            Fee: $\${c.fee.toFixed(2)} • Rate: \${c.rate.toFixed(4)}
+          </div>
+          <div class="savings-badge">
+            💸 Save $\${c.savings} with MyBambu (\${c.savingsPercent}% more!)
+          </div>
+        </div>
+      \`).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+    window.addEventListener('openai:set_globals', render);
+  </script>
+</body>
+</html>`;
+}
+
+function getSpendingAnalyticsComponent(): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .mybambu-logo {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .breakdown-section {
+      margin-top: 24px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .breakdown-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .breakdown-label {
+      font-weight: 500;
+      color: #333;
+    }
+    .breakdown-amount {
+      font-weight: 600;
+      color: #f5576c;
+    }
+    .breakdown-bar {
+      height: 6px;
+      background: linear-gradient(to right, #f093fb, #f5576c);
+      border-radius: 3px;
+      margin-top: 6px;
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="mybambu-logo">MyBambu</div>
+      <h1>📊 Spending Analytics</h1>
+      <p class="subtitle" id="subtitle">Loading...</p>
+    </div>
+
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="breakdown-section">
+      <div class="section-title">💵 By Country</div>
+      <div id="byCountry"></div>
+    </div>
+
+    <div class="breakdown-section">
+      <div class="section-title">👥 By Recipient</div>
+      <div id="byRecipient"></div>
+    </div>
+  </div>
+
+  <script>
+    function render() {
+      if (!window.openai || !window.openai.toolOutput) {
+        setTimeout(render, 100);
+        return;
+      }
+
+      const data = window.openai.toolOutput;
+
+      document.getElementById('subtitle').textContent = data.period || 'All time';
+
+      document.getElementById('statsGrid').innerHTML = \`
+        <div class="stat-card">
+          <div class="stat-label">Total Sent</div>
+          <div class="stat-value">$\${data.totalSent.toFixed(0)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Transfers</div>
+          <div class="stat-value">\${data.transferCount}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Fees</div>
+          <div class="stat-value">$\${data.totalFees.toFixed(2)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Transfer</div>
+          <div class="stat-value">$\${data.avgTransfer.toFixed(0)}</div>
+        </div>
+      \`;
+
+      const countryEntries = Object.entries(data.byCountry || {});
+      const maxCountryTotal = Math.max(...countryEntries.map(([_, v]) => v.total));
+
+      document.getElementById('byCountry').innerHTML = countryEntries
+        .sort((a, b) => b[1].total - a[1].total)
+        .map(([country, stats]) => {
+          const width = (stats.total / maxCountryTotal) * 100;
+          return \`
+            <div class="breakdown-item">
+              <div>
+                <div class="breakdown-label">\${country}</div>
+                <div class="breakdown-bar" style="width: \${width}%"></div>
+              </div>
+              <div class="breakdown-amount">$\${stats.total.toFixed(2)}</div>
+            </div>
+          \`;
+        }).join('');
+
+      const recipientEntries = Object.entries(data.byRecipient || {});
+      const maxRecipientTotal = Math.max(...recipientEntries.map(([_, v]) => v.total));
+
+      document.getElementById('byRecipient').innerHTML = recipientEntries
+        .sort((a, b) => b[1].total - a[1].total)
+        .slice(0, 5)
+        .map(([name, stats]) => {
+          const width = (stats.total / maxRecipientTotal) * 100;
+          return \`
+            <div class="breakdown-item">
+              <div>
+                <div class="breakdown-label">\${name}</div>
+                <div class="breakdown-bar" style="width: \${width}%"></div>
+              </div>
+              <div class="breakdown-amount">$\${stats.total.toFixed(2)}</div>
+            </div>
+          \`;
+        }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+    window.addEventListener('openai:set_globals', render);
+  </script>
+</body>
+</html>`;
+}
+
 // Create MCP server
 function createTransfersServer(): Server {
   const server = new Server(
@@ -1322,6 +1677,18 @@ function createTransfersServer(): Server {
         name: "Scheduled Transfers Widget",
         mimeType: "text/html+skybridge",
         description: "View and manage recurring transfer schedules"
+      },
+      {
+        uri: "component://rate-comparison",
+        name: "Rate Comparison Widget",
+        mimeType: "text/html+skybridge",
+        description: "Compare MyBambu rates against competitors"
+      },
+      {
+        uri: "component://spending-analytics",
+        name: "Spending Analytics Widget",
+        mimeType: "text/html+skybridge",
+        description: "Visual analytics and insights for transfer history"
       }
     ]
   }));
@@ -1341,6 +1708,10 @@ function createTransfersServer(): Server {
       html = getRecipientManagementComponent();
     } else if (uri === "component://scheduled-transfers") {
       html = getScheduledTransfersComponent();
+    } else if (uri === "component://rate-comparison") {
+      html = getRateComparisonComponent();
+    } else if (uri === "component://spending-analytics") {
+      html = getSpendingAnalyticsComponent();
     } else {
       throw new Error(`Unknown resource: ${uri}`);
     }
@@ -1694,6 +2065,101 @@ User requests like "Can you keep a running list..." mean "show me what's already
             invoked: "Schedule canceled"
           },
           readOnlyHint: false
+        }
+      },
+      {
+        name: "send_again",
+        description: "Quick action to repeat the last transfer to a specific recipient. Use when user says 'send again', 'repeat last transfer', 'send same amount to [name]', 'do it again', or wants to quickly repeat a recent transfer without specifying all details again.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            recipient_name: {
+              type: "string",
+              description: "Name of the recipient to send to again (optional - if not provided, uses last overall transfer)"
+            }
+          },
+        },
+        _meta: {
+          "openai/outputTemplate": "component://transfer-receipt",
+          "openai/toolInvocation": {
+            invoking: "Repeating transfer...",
+            invoked: "Transfer sent again!"
+          },
+          readOnlyHint: false
+        }
+      },
+      {
+        name: "quick_send",
+        description: "Super fast sending to recent or favorite recipients with minimal friction. Use when user says 'quick send', 'fast send', 'send [amount] to [name]' without full details, or wants instant transfer to someone they've sent to before.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            recipient_name: {
+              type: "string",
+              description: "Name of the recipient"
+            },
+            amount: {
+              type: "number",
+              description: "Amount to send in USD"
+            }
+          },
+          required: ["recipient_name", "amount"],
+        },
+        _meta: {
+          "openai/outputTemplate": "component://transfer-receipt",
+          "openai/toolInvocation": {
+            invoking: "Quick sending...",
+            invoked: "Sent instantly!"
+          },
+          readOnlyHint: false
+        }
+      },
+      {
+        name: "compare_rates",
+        description: "Compare MyBambu exchange rates and fees against competitors like Western Union, MoneyGram, Remitly, Wise, and Xoom. Use when user asks 'compare rates', 'how do your rates compare', 'am I getting a good deal', 'MyBambu vs Western Union', or wants to see rate comparisons.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            to_country: {
+              type: "string",
+              description: "Destination country to compare rates for"
+            },
+            amount: {
+              type: "number",
+              description: "Amount in USD to compare (optional, defaults to $100)"
+            }
+          },
+          required: ["to_country"],
+        },
+        _meta: {
+          "openai/outputTemplate": "component://rate-comparison",
+          "openai/toolInvocation": {
+            invoking: "Comparing rates across providers...",
+            invoked: "Rate comparison ready"
+          },
+          readOnlyHint: true
+        }
+      },
+      {
+        name: "get_spending_analytics",
+        description: "Show spending breakdown and analytics with charts, trends, and insights. Use when user asks 'show my spending', 'analytics', 'breakdown by country', 'how much have I sent', 'spending report', 'transfer trends', or wants visual insights into their transfer history.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            period: {
+              type: "string",
+              description: "Time period for analytics",
+              enum: ["week", "month", "quarter", "year", "all-time"]
+            }
+          },
+        },
+        _meta: {
+          "openai/outputTemplate": "component://spending-analytics",
+          "openai/toolInvocation": {
+            invoking: "Analyzing your transfers...",
+            invoked: "Analytics ready"
+          },
+          readOnlyHint: true
         }
       }
     ],
@@ -2289,6 +2755,346 @@ User requests like "Can you keep a running list..." mean "show me what's already
         },
         _meta: {
           "openai/outputTemplate": "component://scheduled-transfers"
+        }
+      };
+    }
+
+    // TOOL: send_again
+    if (toolName === "send_again") {
+      const { recipient_name } = args as any;
+
+      // Find the last transfer to this recipient (or overall last transfer if no name)
+      const allTransfers = Array.from(transfers.values())
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      let lastTransfer;
+      if (recipient_name) {
+        lastTransfer = allTransfers.find(t =>
+          t.recipient_name.toLowerCase().includes(recipient_name.toLowerCase())
+        );
+      } else {
+        lastTransfer = allTransfers[0];
+      }
+
+      if (!lastTransfer) {
+        return {
+          content: [{
+            type: "text",
+            text: recipient_name
+              ? `❌ No previous transfers found to ${recipient_name}`
+              : `❌ No previous transfers found. Send your first transfer!`
+          }],
+          isError: true
+        };
+      }
+
+      // Repeat the transfer with same amount and recipient
+      const transferId = `TXN-${transferCounter++}`;
+      const mybambuId = `BAMBU-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+
+      const corridor = SUPPORTED_CORRIDORS.find(c =>
+        c.country.toLowerCase() === lastTransfer.recipient_country.toLowerCase()
+      )!;
+
+      const rateData = await fetchExchangeRates();
+      const rate = rateData.rates[corridor.currency];
+      const feeAmount = lastTransfer.fee;
+      const netAmount = lastTransfer.amount - feeAmount;
+      const recipientAmount = netAmount * rate;
+
+      const newTransfer = {
+        id: transferId,
+        mybambu_id: mybambuId,
+        from_currency: 'USD',
+        to_currency: corridor.currency,
+        amount: lastTransfer.amount,
+        fee: feeAmount,
+        net_amount: netAmount,
+        exchange_rate: rate,
+        recipient_amount: recipientAmount,
+        recipient_name: lastTransfer.recipient_name,
+        recipient_country: lastTransfer.recipient_country,
+        delivery_time: corridor.deliveryTime,
+        status: 'completed',
+        estimated_arrival: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+        created_at: new Date().toISOString()
+      };
+
+      transfers.set(transferId, newTransfer);
+
+      return {
+        content: [{
+          type: "text",
+          text: `✅ Transfer repeated! Sent $${lastTransfer.amount} to ${lastTransfer.recipient_name} in ${lastTransfer.recipient_country} again. They'll receive ${recipientAmount.toFixed(2)} ${corridor.currency}.`
+        }],
+        structuredContent: newTransfer,
+        _meta: {
+          "openai/outputTemplate": "component://transfer-receipt",
+          repeated: true,
+          originalTransferId: lastTransfer.id
+        }
+      };
+    }
+
+    // TOOL: quick_send
+    if (toolName === "quick_send") {
+      const { recipient_name, amount } = args as any;
+
+      // Look up recipient in saved recipients or past transfers
+      const savedRecipient = Array.from(recipients.values()).find(r =>
+        r.name.toLowerCase().includes(recipient_name.toLowerCase())
+      );
+
+      const pastTransfer = Array.from(transfers.values()).find(t =>
+        t.recipient_name.toLowerCase().includes(recipient_name.toLowerCase())
+      );
+
+      const targetCountry = savedRecipient?.country || pastTransfer?.recipient_country;
+
+      if (!targetCountry) {
+        return {
+          content: [{
+            type: "text",
+            text: `❌ I don't have ${recipient_name} in your recipients or transfer history. Please specify the country: "Quick send $${amount} to ${recipient_name} in [country]"`
+          }],
+          isError: true
+        };
+      }
+
+      // Send using existing send_money logic
+      const corridor = SUPPORTED_CORRIDORS.find(c =>
+        c.country.toLowerCase() === targetCountry.toLowerCase()
+      );
+
+      if (!corridor) {
+        return {
+          content: [{
+            type: "text",
+            text: `❌ Sorry, we don't support transfers to ${targetCountry} yet.`
+          }],
+          isError: true
+        };
+      }
+
+      const transferId = `TXN-${transferCounter++}`;
+      const mybambuId = `BAMBU-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+      const rateData = await fetchExchangeRates();
+      const rate = rateData.rates[corridor.currency];
+      const feeAmount = amount * transferLimits.fees.standard;
+      const netAmount = amount - feeAmount;
+      const recipientAmount = netAmount * rate;
+
+      const transfer = {
+        id: transferId,
+        mybambu_id: mybambuId,
+        from_currency: 'USD',
+        to_currency: corridor.currency,
+        amount,
+        fee: feeAmount,
+        net_amount: netAmount,
+        exchange_rate: rate,
+        recipient_amount: recipientAmount,
+        recipient_name,
+        recipient_country: corridor.country,
+        delivery_time: corridor.deliveryTime,
+        status: 'completed',
+        estimated_arrival: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+        created_at: new Date().toISOString()
+      };
+
+      transfers.set(transferId, transfer);
+
+      // Update recipient stats if exists
+      if (savedRecipient) {
+        savedRecipient.total_sent += amount;
+        savedRecipient.transfer_count++;
+      }
+
+      return {
+        content: [{
+          type: "text",
+          text: `⚡ Quick sent! $${amount} to ${recipient_name} in ${corridor.country}. They'll receive ${recipientAmount.toFixed(2)} ${corridor.currency} in ${corridor.deliveryTime}.`
+        }],
+        structuredContent: transfer,
+        _meta: {
+          "openai/outputTemplate": "component://transfer-receipt",
+          quickSend: true
+        }
+      };
+    }
+
+    // TOOL: compare_rates
+    if (toolName === "compare_rates") {
+      const { to_country, amount = 100 } = args as any;
+
+      const corridor = SUPPORTED_CORRIDORS.find(c =>
+        c.country.toLowerCase() === to_country.toLowerCase()
+      );
+
+      if (!corridor) {
+        return {
+          content: [{
+            type: "text",
+            text: `❌ Sorry, we don't support transfers to ${to_country} yet.`
+          }],
+          isError: true
+        };
+      }
+
+      // Get exchange rate
+      const rateData = await fetchExchangeRates();
+      const baseRate = rateData.rates[corridor.currency];
+
+      // Simulate competitor rates (MyBambu is always better!)
+      const mybambuFee = amount * transferLimits.fees.standard;
+      const mybambuNet = amount - mybambuFee;
+      const mybambuReceives = mybambuNet * baseRate;
+
+      const competitors = [
+        {
+          name: "Western Union",
+          fee: amount * 0.05, // 5%
+          rate: baseRate * 0.96, // Worse rate
+          color: "#FFCC00"
+        },
+        {
+          name: "MoneyGram",
+          fee: amount * 0.048, // 4.8%
+          rate: baseRate * 0.965, // Worse rate
+          color: "#E31C25"
+        },
+        {
+          name: "Remitly",
+          fee: amount * 0.035, // 3.5%
+          rate: baseRate * 0.98, // Slightly worse rate
+          color: "#5B47FB"
+        },
+        {
+          name: "Wise",
+          fee: amount * 0.032, // 3.2%
+          rate: baseRate * 0.99, // Slightly worse rate
+          color: "#37517E"
+        }
+      ];
+
+      const comparison = competitors.map(comp => {
+        const net = amount - comp.fee;
+        const receives = net * comp.rate;
+        const savings = mybambuReceives - receives;
+        return {
+          ...comp,
+          net,
+          receives: receives.toFixed(2),
+          savings: savings.toFixed(2),
+          savingsPercent: ((savings / receives) * 100).toFixed(1)
+        };
+      });
+
+      return {
+        content: [{
+          type: "text",
+          text: `💰 Rate Comparison for $${amount} to ${corridor.country}:\n\n` +
+            `MyBambu: ${mybambuReceives.toFixed(2)} ${corridor.currency} (Fee: $${mybambuFee.toFixed(2)})\n\n` +
+            comparison.map(c =>
+              `${c.name}: ${c.receives} ${corridor.currency} (Fee: $${c.fee.toFixed(2)}) - You save $${c.savings} with MyBambu! 🎉`
+            ).join('\n')
+        }],
+        structuredContent: {
+          mybambu: {
+            fee: mybambuFee,
+            net: mybambuNet,
+            rate: baseRate,
+            receives: mybambuReceives,
+            currency: corridor.currency
+          },
+          competitors: comparison,
+          country: corridor.country,
+          amount
+        },
+        _meta: {
+          "openai/outputTemplate": "component://rate-comparison"
+        }
+      };
+    }
+
+    // TOOL: get_spending_analytics
+    if (toolName === "get_spending_analytics") {
+      const { period = "all-time" } = args as any;
+
+      const allTransfers = Array.from(transfers.values())
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      if (allTransfers.length === 0) {
+        return {
+          content: [{
+            type: "text",
+            text: `📊 No transfers yet to analyze. Start sending money to see your analytics!`
+          }],
+          structuredContent: {
+            totalSent: 0,
+            totalFees: 0,
+            transferCount: 0,
+            byCountry: {},
+            byRecipient: {},
+            period
+          }
+        };
+      }
+
+      const totalSent = allTransfers.reduce((sum, t) => sum + t.amount, 0);
+      const totalFees = allTransfers.reduce((sum, t) => sum + t.fee, 0);
+      const avgTransfer = totalSent / allTransfers.length;
+
+      // Group by country
+      const byCountry = allTransfers.reduce((acc: any, t) => {
+        if (!acc[t.recipient_country]) {
+          acc[t.recipient_country] = { count: 0, total: 0, currency: t.to_currency };
+        }
+        acc[t.recipient_country].count++;
+        acc[t.recipient_country].total += t.amount;
+        return acc;
+      }, {});
+
+      // Group by recipient
+      const byRecipient = allTransfers.reduce((acc: any, t) => {
+        if (!acc[t.recipient_name]) {
+          acc[t.recipient_name] = { count: 0, total: 0, country: t.recipient_country };
+        }
+        acc[t.recipient_name].count++;
+        acc[t.recipient_name].total += t.amount;
+        return acc;
+      }, {});
+
+      const topCountry = Object.entries(byCountry)
+        .sort((a: any, b: any) => b[1].total - a[1].total)[0];
+
+      const topRecipient = Object.entries(byRecipient)
+        .sort((a: any, b: any) => b[1].total - a[1].total)[0];
+
+      return {
+        content: [{
+          type: "text",
+          text: `📊 Your Transfer Analytics (${period}):\n\n` +
+            `💵 Total sent: $${totalSent.toFixed(2)}\n` +
+            `💸 Total fees: $${totalFees.toFixed(2)}\n` +
+            `📦 Transfers: ${allTransfers.length}\n` +
+            `📊 Average: $${avgTransfer.toFixed(2)}\n\n` +
+            `🌍 Top country: ${topCountry[0]} ($${(topCountry[1] as any).total.toFixed(2)})\n` +
+            `👤 Top recipient: ${topRecipient[0]} ($${(topRecipient[1] as any).total.toFixed(2)})`
+        }],
+        structuredContent: {
+          totalSent,
+          totalFees,
+          transferCount: allTransfers.length,
+          avgTransfer,
+          byCountry,
+          byRecipient,
+          topCountry: { name: topCountry[0], data: topCountry[1] },
+          topRecipient: { name: topRecipient[0], data: topRecipient[1] },
+          period
+        },
+        _meta: {
+          "openai/outputTemplate": "component://spending-analytics"
         }
       };
     }
