@@ -1358,6 +1358,10 @@ function createTransfersServer(): Server {
   server.setRequestHandler(ListPromptsRequestSchema, async () => ({
     prompts: [
       {
+        name: "mybambu-instructions",
+        description: "CRITICAL SYSTEM INSTRUCTIONS for using MyBambu tools - READ THIS FIRST"
+      },
+      {
         name: "send-money",
         description: "Send money internationally through MyBambu to 90+ countries with low fees and fast delivery"
       },
@@ -1370,6 +1374,42 @@ function createTransfersServer(): Server {
 
   server.setRequestHandler(GetPromptRequestSchema, async (request) => {
     const promptName = request.params.name;
+
+    if (promptName === "mybambu-instructions") {
+      return {
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `CRITICAL: MyBambu Transfer System Instructions
+
+ALWAYS use the available tools instead of manually responding. All transfer data is already stored and retrievable via tools.
+
+When users ask about transfers, history, status, or recipients:
+- "show/list/view transfers" → CALL get_transfer_history tool
+- "check/track status" → CALL check_transfer_status tool
+- "what countries" → CALL get_supported_countries tool
+- "show/list recipients" → CALL list_recipients tool
+- "exchange rate" / "how much is X in Y" → CALL get_exchange_rate tool
+- "schedule/recurring/automatic" → CALL schedule_transfer or list_scheduled_transfers tool
+
+NEVER manually create lists or say "I don't know" when tools are available. If user asks about data (history, recipients, schedules), ALWAYS call the corresponding tool first.
+
+The system stores:
+✓ All past transfers (retrievable via get_transfer_history)
+✓ All saved recipients (retrievable via list_recipients)
+✓ All scheduled transfers (retrievable via list_scheduled_transfers)
+✓ Real-time transfer status (retrievable via check_transfer_status)
+✓ Live exchange rates (retrievable via get_exchange_rate)
+✓ Supported countries list (retrievable via get_supported_countries)
+
+User requests like "Can you keep a running list..." mean "show me what's already stored" → call get_transfer_history immediately.`
+            }
+          }
+        ]
+      };
+    }
 
     if (promptName === "send-money" || promptName === "money-transfer") {
       return {
@@ -1472,7 +1512,7 @@ function createTransfersServer(): Server {
       },
       {
         name: "get_transfer_history",
-        description: "View transfer history, see past transfers, show all transfers, get transaction list, or check previous payments. Use when user asks 'show my history', 'what transfers did I make', 'list my transfers', 'transfer history', 'past transactions', 'what did I send', 'show all transfers', or wants to see a log/list of their transfers. Shows all transfers with their status, amounts, recipients, and dates.",
+        description: "View transfer history, see past transfers, show all transfers, get transaction list, check previous payments, or keep a running list. Use when user asks 'show my history', 'what transfers did I make', 'list my transfers', 'transfer history', 'past transactions', 'what did I send', 'show all transfers', 'can you keep a running list', 'track my transfers', 'log of transfers', or wants to see any log/list/history of their transfers. IMPORTANT: This retrieves EXISTING stored transfers - all transfer data is already saved and available. Shows all transfers with their status, amounts, recipients, and dates.",
         inputSchema: {
           type: "object",
           properties: {
