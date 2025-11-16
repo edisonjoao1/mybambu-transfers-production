@@ -97,22 +97,25 @@ export class WiseService {
    * Create a transfer
    */
   async createTransfer(request: TransferRequest) {
-    try {
-      const payload: any = {
-        targetAccount: request.targetAccount,
-        quoteUuid: request.quoteUuid,
-        details: request.details || {}
-      };
+    const payload: any = {
+      targetAccount: request.targetAccount,
+      quoteUuid: request.quoteUuid,
+      details: request.details || {}
+    };
 
-      // Only include customerTransactionId if provided
-      if (request.customerTransactionId) {
-        payload.customerTransactionId = request.customerTransactionId;
-      }
+    // Only include customerTransactionId if provided
+    if (request.customerTransactionId) {
+      payload.customerTransactionId = request.customerTransactionId;
+    }
+
+    try {
+      console.log('🔍 Transfer payload:', JSON.stringify(payload, null, 2));
 
       const response = await this.client.post('/v1/transfers', payload);
       return response.data;
     } catch (error: any) {
       console.error('Wise Transfer Error:', error.response?.data || error.message);
+      console.error('Payload that failed:', JSON.stringify(payload, null, 2));
       throw new Error(`Failed to create transfer: ${error.response?.data?.message || error.message}`);
     }
   }
@@ -251,14 +254,7 @@ export class WiseService {
         customerTransactionId: randomUUID(), // Proper UUID v4
         details: {
           reference: params.reference || 'MyBambu Transfer',
-          sourceOfFunds: 'verification.source.of.funds.other',
-          // Sender address (required in sandbox)
-          address: {
-            country: 'US',
-            postCode: '10001',
-            firstLine: '50 W 23rd St',
-            city: 'New York'
-          }
+          sourceOfFunds: 'verification.source.of.funds.other'
         }
       });
 
