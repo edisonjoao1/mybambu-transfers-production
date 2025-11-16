@@ -725,86 +725,99 @@ function getTransferHistoryComponent(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       min-height: 100vh;
     }
     .container {
       background: white;
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 600px;
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 640px;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 24px 72px rgba(24, 99, 220, 0.2);
+      animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .header {
       text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #f0f0f0;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #f4f4f4;
     }
     h1 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 4px;
+      font-size: 26px;
+      color: #0D1752;
+      margin-bottom: 8px;
+      font-weight: 800;
     }
     .subtitle {
-      font-size: 14px;
-      color: #666;
+      font-size: 15px;
+      color: #6B7280;
+      font-weight: 600;
     }
     .transfer-item {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 16px;
+      background: #F8F9FA;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 14px;
       cursor: pointer;
-      transition: all 0.2s;
-      border-left: 4px solid transparent;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 4px solid #F0F0F0;
+      border: 2px solid #F0F0F0;
     }
     .transfer-item:hover {
-      transform: translateX(4px);
-      border-left-color: #667eea;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(6px);
+      border-color: #1863DC;
+      box-shadow: 0 8px 24px rgba(24, 99, 220, 0.15);
+      background: white;
     }
     .transfer-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .transfer-amount {
-      font-size: 24px;
-      font-weight: 700;
-      color: #667eea;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1863DC;
+      letter-spacing: -0.5px;
     }
     .transfer-status {
-      padding: 6px 12px;
-      border-radius: 12px;
+      padding: 8px 14px;
+      border-radius: 16px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .status-completed { background: #d1e7dd; color: #0f5132; }
-    .status-pending { background: #fff3cd; color: #856404; }
-    .status-processing { background: #cfe2ff; color: #084298; }
+    .status-completed { background: #D1F4E0; color: #17CA60; }
+    .status-pending { background: #FFF3CD; color: #856404; }
+    .status-processing { background: #D1E7FE; color: #1863DC; }
     .transfer-details {
       display: flex;
       justify-content: space-between;
       font-size: 14px;
-      color: #666;
+      color: #6B7280;
+      font-weight: 600;
     }
     .empty-state {
       text-align: center;
-      padding: 60px 20px;
-      color: #999;
+      padding: 80px 20px;
+      color: #9CA3AF;
     }
     .empty-state-icon {
-      font-size: 64px;
-      margin-bottom: 16px;
-      opacity: 0.5;
+      font-size: 72px;
+      margin-bottom: 20px;
+      opacity: 0.4;
     }
   </style>
 </head>
@@ -882,121 +895,194 @@ function getRecipientManagementComponent(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       min-height: 100vh;
     }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.4;
+      }
+      50% {
+        transform: scale(1.15) rotate(45deg);
+        opacity: 0.7;
+      }
+    }
+
     .container {
       background: white;
-      border-radius: 20px;
-      padding: 28px;
+      border-radius: 24px;
+      padding: 32px;
       max-width: 600px;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 24px 72px rgba(24, 99, 220, 0.2);
+      animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     .header {
       text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #f0f0f0;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #F0F0F0;
     }
+
     .mybambu-logo {
-      font-size: 20px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1863DC;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
     }
+
     h1 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 4px;
+      font-size: 28px;
+      color: #0D1752;
+      margin-bottom: 6px;
+      font-weight: 800;
     }
+
     .subtitle {
-      font-size: 14px;
+      font-size: 15px;
       color: #666;
+      font-weight: 600;
     }
+
     .recipient-card {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 20px;
+      background: #F8F9FA;
+      border-radius: 16px;
+      padding: 24px;
       margin-bottom: 16px;
       cursor: pointer;
-      transition: all 0.2s;
-      border-left: 4px solid #667eea;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid #F0F0F0;
+      border-left: 4px solid #1863DC;
       position: relative;
+      overflow: hidden;
     }
+
+    .recipient-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(24, 99, 220, 0.08) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
     .recipient-card:hover {
-      transform: translateX(4px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(8px);
+      box-shadow: 0 12px 28px rgba(24, 99, 220, 0.2);
+      background: white;
+      border-color: #1863DC;
     }
+
     .recipient-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .recipient-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1863DC;
       margin-bottom: 8px;
     }
-    .recipient-name {
-      font-size: 20px;
-      font-weight: 700;
-      color: #667eea;
-    }
+
     .recipient-country {
-      font-size: 14px;
+      font-size: 15px;
       color: #666;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      font-weight: 600;
     }
+
     .recipient-currency {
-      font-size: 12px;
+      font-size: 13px;
       color: #999;
-      font-family: monospace;
+      font-family: 'Nunito', monospace;
+      font-weight: 600;
     }
+
     .delete-btn {
       background: #dc3545;
       color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Nunito', sans-serif;
     }
+
     .delete-btn:hover {
       background: #c82333;
-      transform: scale(1.05);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(220, 53, 69, 0.3);
     }
+
     .empty-state {
       text-align: center;
       padding: 60px 20px;
       color: #999;
     }
+
     .empty-state-icon {
-      font-size: 64px;
-      margin-bottom: 16px;
-      opacity: 0.5;
+      font-size: 72px;
+      margin-bottom: 20px;
+      opacity: 0.4;
     }
+
+    .empty-state p {
+      font-weight: 600;
+      color: #666;
+    }
+
     .add-btn {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       color: white;
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 24px;
+      font-family: 'Nunito', sans-serif;
+      box-shadow: 0 6px 16px rgba(24, 99, 220, 0.2);
     }
+
     .add-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 12px 28px rgba(24, 99, 220, 0.3);
+      background: #296BFF;
     }
   </style>
 </head>
@@ -1098,128 +1184,211 @@ function getScheduledTransfersComponent(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       min-height: 100vh;
     }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0%, 100% {
+        transform: translate(0, 0);
+        opacity: 0.5;
+      }
+      50% {
+        transform: translate(10%, 10%);
+        opacity: 0.8;
+      }
+    }
+
     .container {
       background: white;
-      border-radius: 20px;
-      padding: 28px;
+      border-radius: 24px;
+      padding: 32px;
       max-width: 600px;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 24px 72px rgba(24, 99, 220, 0.2);
+      animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     .header {
       text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #f0f0f0;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #F0F0F0;
     }
+
     .mybambu-logo {
-      font-size: 20px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1863DC;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
     }
+
     h1 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 4px;
+      font-size: 28px;
+      color: #0D1752;
+      margin-bottom: 6px;
+      font-weight: 800;
     }
+
     .subtitle {
-      font-size: 14px;
+      font-size: 15px;
       color: #666;
+      font-weight: 600;
     }
+
     .schedule-card {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 20px;
+      background: #F8F9FA;
+      border-radius: 16px;
+      padding: 24px;
       margin-bottom: 16px;
-      border-left: 4px solid #28a745;
+      border: 2px solid #F0F0F0;
+      border-left: 4px solid #17CA60;
       position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    .schedule-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(23, 202, 96, 0.08) 0%, transparent 70%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .schedule-card:hover {
+      box-shadow: 0 12px 28px rgba(23, 202, 96, 0.15);
+      border-color: #17CA60;
+      background: white;
+    }
+
     .schedule-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
     }
+
     .schedule-amount {
-      font-size: 28px;
-      font-weight: 700;
-      color: #28a745;
+      font-size: 36px;
+      font-weight: 800;
+      color: #17CA60;
+      letter-spacing: -1px;
     }
+
     .schedule-frequency {
       display: inline-block;
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       text-transform: uppercase;
-      background: #d4edda;
-      color: #155724;
-      margin-top: 4px;
-    }
-    .schedule-details {
-      font-size: 14px;
-      color: #666;
+      background: linear-gradient(135deg, #D1F4E0 0%, #B8F0D0 100%);
+      color: #0A6E35;
       margin-top: 8px;
+      box-shadow: 0 2px 8px rgba(23, 202, 96, 0.15);
     }
+
+    .schedule-details {
+      font-size: 15px;
+      color: #666;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
     .schedule-detail-row {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
-      border-top: 1px solid #e0e0e0;
+      padding: 10px 0;
+      border-top: 1px solid #E0E0E0;
+      font-weight: 600;
     }
+
     .cancel-btn {
       background: #dc3545;
       color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 16px;
       width: 100%;
+      font-family: 'Nunito', sans-serif;
+      position: relative;
+      z-index: 1;
     }
+
     .cancel-btn:hover {
       background: #c82333;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(220, 53, 69, 0.3);
     }
+
     .empty-state {
       text-align: center;
       padding: 60px 20px;
       color: #999;
     }
+
     .empty-state-icon {
-      font-size: 64px;
-      margin-bottom: 16px;
-      opacity: 0.5;
+      font-size: 72px;
+      margin-bottom: 20px;
+      opacity: 0.4;
     }
+
+    .empty-state p {
+      font-weight: 600;
+      color: #666;
+    }
+
     .add-btn {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       color: white;
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 24px;
+      font-family: 'Nunito', sans-serif;
+      box-shadow: 0 6px 16px rgba(24, 99, 220, 0.2);
     }
+
     .add-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 12px 28px rgba(24, 99, 220, 0.3);
+      background: #296BFF;
     }
   </style>
 </head>
