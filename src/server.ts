@@ -1,10 +1,12 @@
+import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import { existsSync } from 'node:fs';
 import { config } from 'dotenv';
-// Only load .env file locally (skip in production - Railway/Render provide env vars natively)
-if (process.env.NODE_ENV !== 'production') {
+
+// Only load .env file if it exists (for local development)
+// Railway/Render provide env vars natively - no .env file needed
+if (existsSync('.env')) {
   config();
 }
-
-import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { URL } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
