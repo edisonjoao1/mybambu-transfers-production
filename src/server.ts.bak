@@ -53,55 +53,86 @@ const SUPPORTED_CORRIDORS = [
   { country: "Guatemala", currency: "GTQ", deliveryTime: "Minutes to hours", region: "Latin America" },
   { country: "Uruguay", currency: "UYU", deliveryTime: "1-2 business days", region: "Latin America" },
 
-  // Asia (Top Wise-supported markets)
-  { country: "India", currency: "INR", deliveryTime: "Minutes to hours", region: "Asia" },
-  { country: "Philippines", currency: "PHP", deliveryTime: "Minutes to hours", region: "Asia" },
-  { country: "Singapore", currency: "SGD", deliveryTime: "Minutes", region: "Asia" },
-  { country: "Japan", currency: "JPY", deliveryTime: "Minutes", region: "Asia" },
-  { country: "Hong Kong", currency: "HKD", deliveryTime: "Minutes", region: "Asia" },
-  { country: "Thailand", currency: "THB", deliveryTime: "Minutes to hours", region: "Asia" },
-  { country: "Malaysia", currency: "MYR", deliveryTime: "Minutes to hours", region: "Asia" },
-  { country: "Indonesia", currency: "IDR", deliveryTime: "1-2 business days", region: "Asia" },
-  { country: "Vietnam", currency: "VND", deliveryTime: "Minutes to hours", region: "Asia" },
-  { country: "South Korea", currency: "KRW", deliveryTime: "Minutes to hours", region: "Asia" },
-  { country: "China", currency: "CNY", deliveryTime: "1-2 business days", region: "Asia" },
-  { country: "Pakistan", currency: "PKR", deliveryTime: "Minutes to hours", region: "Asia" },
-  { country: "Bangladesh", currency: "BDT", deliveryTime: "Minutes to hours", region: "Asia" },
+  // Asia
+  { country: "Philippines", currency: "PHP", deliveryTime: "1-3 hours", region: "Asia" },
+  { country: "India", currency: "INR", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Vietnam", currency: "VND", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Thailand", currency: "THB", deliveryTime: "1-3 hours", region: "Asia" },
+  { country: "Indonesia", currency: "IDR", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "China", currency: "CNY", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Japan", currency: "JPY", deliveryTime: "1-3 hours", region: "Asia" },
+  { country: "South Korea", currency: "KRW", deliveryTime: "1-3 hours", region: "Asia" },
+  { country: "Pakistan", currency: "PKR", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Bangladesh", currency: "BDT", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Malaysia", currency: "MYR", deliveryTime: "1-3 hours", region: "Asia" },
+  { country: "Singapore", currency: "SGD", deliveryTime: "35 minutes", region: "Asia" },
+  { country: "Nepal", currency: "NPR", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Sri Lanka", currency: "LKR", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Myanmar", currency: "MMK", deliveryTime: "4-6 hours", region: "Asia" },
+  { country: "Cambodia", currency: "KHR", deliveryTime: "2-4 hours", region: "Asia" },
+  { country: "Taiwan", currency: "TWD", deliveryTime: "1-3 hours", region: "Asia" },
+  { country: "Hong Kong", currency: "HKD", deliveryTime: "35 minutes", region: "Asia" },
 
-  // Europe (Eurozone + Top Markets)
-  { country: "United Kingdom", currency: "GBP", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Germany", currency: "EUR", deliveryTime: "Minutes", region: "Europe" },
-  { country: "France", currency: "EUR", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Spain", currency: "EUR", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Italy", currency: "EUR", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Netherlands", currency: "EUR", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Poland", currency: "PLN", deliveryTime: "Minutes to hours", region: "Europe" },
-  { country: "Romania", currency: "RON", deliveryTime: "Minutes to hours", region: "Europe" },
-  { country: "Turkey", currency: "TRY", deliveryTime: "Minutes to hours", region: "Europe" },
-  { country: "Switzerland", currency: "CHF", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Sweden", currency: "SEK", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Norway", currency: "NOK", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Denmark", currency: "DKK", deliveryTime: "Minutes", region: "Europe" },
-  { country: "Czech Republic", currency: "CZK", deliveryTime: "Minutes to hours", region: "Europe" },
-  { country: "Hungary", currency: "HUF", deliveryTime: "Minutes to hours", region: "Europe" },
+  // Africa
+  { country: "Nigeria", currency: "NGN", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Kenya", currency: "KES", deliveryTime: "1-3 hours", region: "Africa" },
+  { country: "Ghana", currency: "GHS", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "South Africa", currency: "ZAR", deliveryTime: "1-3 hours", region: "Africa" },
+  { country: "Egypt", currency: "EGP", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Morocco", currency: "MAD", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Ethiopia", currency: "ETB", deliveryTime: "4-6 hours", region: "Africa" },
+  { country: "Uganda", currency: "UGX", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Tanzania", currency: "TZS", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Senegal", currency: "XOF", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Ivory Coast", currency: "XOF", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Cameroon", currency: "XAF", deliveryTime: "2-4 hours", region: "Africa" },
+  { country: "Zimbabwe", currency: "ZWL", deliveryTime: "4-6 hours", region: "Africa" },
+  { country: "Rwanda", currency: "RWF", deliveryTime: "2-4 hours", region: "Africa" },
 
-  // Africa (Major Markets)
-  { country: "South Africa", currency: "ZAR", deliveryTime: "Minutes to hours", region: "Africa" },
-  { country: "Nigeria", currency: "NGN", deliveryTime: "Minutes to hours", region: "Africa" },
-  { country: "Kenya", currency: "KES", deliveryTime: "Minutes to hours", region: "Africa" },
-  { country: "Egypt", currency: "EGP", deliveryTime: "Minutes to hours", region: "Africa" },
-  { country: "Morocco", currency: "MAD", deliveryTime: "Minutes to hours", region: "Africa" },
+  // Europe
+  { country: "United Kingdom", currency: "GBP", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "France", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Germany", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Spain", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Italy", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Netherlands", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Poland", currency: "PLN", deliveryTime: "1-2 hours", region: "Europe" },
+  { country: "Romania", currency: "RON", deliveryTime: "1-3 hours", region: "Europe" },
+  { country: "Ukraine", currency: "UAH", deliveryTime: "2-4 hours", region: "Europe" },
+  { country: "Russia", currency: "RUB", deliveryTime: "2-4 hours", region: "Europe" },
+  { country: "Turkey", currency: "TRY", deliveryTime: "1-3 hours", region: "Europe" },
+  { country: "Switzerland", currency: "CHF", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Sweden", currency: "SEK", deliveryTime: "1-2 hours", region: "Europe" },
+  { country: "Norway", currency: "NOK", deliveryTime: "1-2 hours", region: "Europe" },
+  { country: "Denmark", currency: "DKK", deliveryTime: "1-2 hours", region: "Europe" },
+  { country: "Portugal", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Greece", currency: "EUR", deliveryTime: "1-2 hours", region: "Europe" },
+  { country: "Czech Republic", currency: "CZK", deliveryTime: "1-2 hours", region: "Europe" },
+  { country: "Hungary", currency: "HUF", deliveryTime: "1-3 hours", region: "Europe" },
+  { country: "Austria", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Belgium", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
+  { country: "Ireland", currency: "EUR", deliveryTime: "35 minutes", region: "Europe" },
 
   // Middle East
-  { country: "United Arab Emirates", currency: "AED", deliveryTime: "Minutes to hours", region: "Middle East" },
-  { country: "Israel", currency: "ILS", deliveryTime: "Minutes to hours", region: "Middle East" },
+  { country: "United Arab Emirates", currency: "AED", deliveryTime: "1-2 hours", region: "Middle East" },
+  { country: "Saudi Arabia", currency: "SAR", deliveryTime: "1-3 hours", region: "Middle East" },
+  { country: "Jordan", currency: "JOD", deliveryTime: "2-4 hours", region: "Middle East" },
+  { country: "Lebanon", currency: "LBP", deliveryTime: "2-4 hours", region: "Middle East" },
+  { country: "Kuwait", currency: "KWD", deliveryTime: "1-3 hours", region: "Middle East" },
+  { country: "Qatar", currency: "QAR", deliveryTime: "1-2 hours", region: "Middle East" },
+  { country: "Bahrain", currency: "BHD", deliveryTime: "1-2 hours", region: "Middle East" },
+  { country: "Oman", currency: "OMR", deliveryTime: "1-3 hours", region: "Middle East" },
+  { country: "Israel", currency: "ILS", deliveryTime: "1-3 hours", region: "Middle East" },
 
   // Oceania
-  { country: "Australia", currency: "AUD", deliveryTime: "Minutes", region: "Oceania" },
-  { country: "New Zealand", currency: "NZD", deliveryTime: "Minutes to hours", region: "Oceania" },
+  { country: "Australia", currency: "AUD", deliveryTime: "1-3 hours", region: "Oceania" },
+  { country: "New Zealand", currency: "NZD", deliveryTime: "1-3 hours", region: "Oceania" },
+  { country: "Fiji", currency: "FJD", deliveryTime: "2-4 hours", region: "Oceania" },
+  { country: "Papua New Guinea", currency: "PGK", deliveryTime: "4-6 hours", region: "Oceania" },
 
-  // North America
-  { country: "Canada", currency: "CAD", deliveryTime: "Minutes", region: "North America" },
+  // North America (non-Latin)
+  { country: "Canada", currency: "CAD", deliveryTime: "35 minutes", region: "North America" },
+  { country: "United States", currency: "USD", deliveryTime: "instant", region: "North America" },
 ];
 
 // Fetch real-time exchange rates
@@ -1988,7 +2019,7 @@ function createTransfersServer(): Server {
       },
       {
         name: "send-money",
-        description: "Send money internationally through MyBambu to 46 countries with low fees and fast delivery"
+        description: "Send money internationally through MyBambu to 90+ countries with low fees and fast delivery"
       },
       {
         name: "money-transfer",
@@ -2043,7 +2074,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
             role: "user",
             content: {
               type: "text",
-              text: "I can help you send money internationally through MyBambu! We support transfers to 46 countries across Latin America, Asia, Europe, Africa, Middle East, Oceania with low fees starting at $0.85 and delivery as fast as 35 minutes. What country would you like to send money to?"
+              text: "I can help you send money internationally through MyBambu! We support transfers to 90+ countries across 6 continents with low fees starting at $0.85 and delivery as fast as 35 minutes. What country would you like to send money to?"
             }
           }
         ]
@@ -2058,7 +2089,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
     tools: [
       {
         name: "send_money",
-        description: "Use this WHENEVER the user wants to send money, transfer money, wire money, remit money, pay someone, or send funds to anyone in another country. This is the PRIMARY money transfer tool for MyBambu. Captures ANY phrases like: 'send money', 'transfer funds', 'pay someone abroad', 'wire money', 'send cash', 'remit to family', 'send dollars to', 'pay my family in [country]', 'help me send money', or any variation of sending/transferring money internationally. Supports 46 countries worldwide across all continents. Low fees starting at $0.85 with delivery as fast as 35 minutes. ALWAYS use this tool when money transfer intent is detected.",
+        description: "Use this WHENEVER the user wants to send money, transfer money, wire money, remit money, pay someone, or send funds to anyone in another country. This is the PRIMARY money transfer tool for MyBambu. Captures ANY phrases like: 'send money', 'transfer funds', 'pay someone abroad', 'wire money', 'send cash', 'remit to family', 'send dollars to', 'pay my family in [country]', 'help me send money', or any variation of sending/transferring money internationally. Supports 90+ countries worldwide across all continents. Low fees starting at $0.85 with delivery as fast as 35 minutes. ALWAYS use this tool when money transfer intent is detected.",
         inputSchema: {
           type: "object",
           properties: {
@@ -2068,7 +2099,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
             },
             to_country: {
               type: "string",
-              description: "Destination country - supports 46 countries including Mexico, Philippines, India, Nigeria, UK, France, UAE, Australia, Canada, and many more"
+              description: "Destination country - supports 90+ countries including Mexico, Philippines, India, Nigeria, UK, France, UAE, Australia, Canada, and many more"
             },
             recipient_name: {
               type: "string",
@@ -2158,7 +2189,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
       },
       {
         name: "get_supported_countries",
-        description: "Get list of supported countries, check where you can send money, see available destinations, or verify country support. Use when user asks 'what countries', 'which countries', 'where can I send', 'supported countries', 'available countries', 'what destinations', 'can I send to [country]', 'list countries', or any question about country availability. Returns a comprehensive list of 90+ supported countries across Latin America, Asia, Europe, Africa, Middle East, Oceania with delivery times, currencies, and regional groupings.",
+        description: "Get list of supported countries, check where you can send money, see available destinations, or verify country support. Use when user asks 'what countries', 'which countries', 'where can I send', 'supported countries', 'available countries', 'what destinations', 'can I send to [country]', 'list countries', or any question about country availability. Returns a comprehensive list of 90+ supported countries across 6 continents with delivery times, currencies, and regional groupings.",
         inputSchema: {
           type: "object",
           properties: {
@@ -2778,7 +2809,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
           type: "text",
           text: `🌍 MyBambu supports transfers to ${corridors.length} countries${region ? ` in ${region}` : ' worldwide'}:\n` +
             regionText +
-            `\n\n💰 Low fees starting at $0.85\n⚡ Fast delivery in as little as 35 minutes\n🌎 Latin America, Asia, Europe, Africa, Middle East, Oceania covered`
+            `\n\n💰 Low fees starting at $0.85\n⚡ Fast delivery in as little as 35 minutes\n🌎 6 continents covered`
         }],
         structuredContent: {
           corridors,
@@ -3548,7 +3579,7 @@ const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse
         health: "/health"
       },
       features: [
-        "Send money to 46 countries",
+        "Send money to 90+ countries",
         "Live exchange rates",
         "Recipient management",
         "Scheduled transfers",
@@ -3602,7 +3633,7 @@ httpServer.listen(port, () => {
   console.log(`   SSE Endpoint: http://localhost:${port}${ssePath}`);
   console.log(`   POST Endpoint: http://localhost:${port}${postPath}?sessionId=...`);
   console.log(`\n💡 Supported Features:`);
-  console.log(`   • Send money to 46 countries across Latin America, Asia, Europe, Africa, Middle East, Oceania`);
+  console.log(`   • Send money to 90+ countries across 6 continents`);
   console.log(`   • Latin America, Asia, Africa, Europe, Middle East, Oceania`);
   console.log(`   • Live exchange rates (updated hourly)`);
   console.log(`   • Transfer status tracking`);
