@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { randomUUID } from 'crypto';
 
 interface WiseConfig {
   apiKey: string;
@@ -90,12 +91,18 @@ export class WiseService {
    */
   async createTransfer(request: TransferRequest) {
     try {
-      const response = await this.client.post('/v1/transfers', {
+      const payload: any = {
         targetAccount: request.targetAccount,
         quoteUuid: request.quoteUuid,
-        customerTransactionId: request.customerTransactionId,
         details: request.details || {}
-      });
+      };
+
+      // Only include customerTransactionId if provided
+      if (request.customerTransactionId) {
+        payload.customerTransactionId = request.customerTransactionId;
+      }
+
+      const response = await this.client.post('/v1/transfers', payload);
       return response.data;
     } catch (error: any) {
       console.error('Wise Transfer Error:', error.response?.data || error.message);
@@ -169,25 +176,82 @@ export class WiseService {
 
       // Step 2: Create recipient
       console.log('Creating recipient...');
+
+      // Determine recipient type and details based on currency
+      let recipientType: string;
+      let recipientDetails: any;
+
+      switch (params.targetCurrency) {
+        case 'MXN': // Mexico
+          recipientType = 'mexican';
+          recipientDetails = {
+            legalType: 'PRIVATE',
+            clabe: params.recipientBankAccount || '032180000118359719' // Wise sandbox test CLABE
+          };
+          break;
+
+        case 'BRL': // Brazil
+          recipientType = 'brazilian';
+          recipientDetails = {
+            legalType: 'PRIVATE',
+            cpf: params.recipientBankCode || '12345678901',
+            accountNumber: params.recipientBankAccount || '12345678',
+            accountType: 'checking',
+            bankCode: '001'
+          };
+          break;
+
+        case 'GBP': // UK
+          recipientType = 'sort_code';
+          recipientDetails = {
+            legalType: 'PRIVATE',
+            sortCode: params.recipientBankCode || '231470',
+            accountNumber: params.recipientBankAccount || '28821822'
+          };
+          break;
+
+        case 'EUR': // Europe (IBAN)
+          recipientType = 'iban';
+          recipientDetails = {
+            legalType: 'PRIVATE',
+            iban: params.recipientBankAccount || 'DE89370400440532013000'
+          };
+          break;
+
+        default:
+          // Generic fallback - will likely fail for most currencies
+          recipientType = 'sort_code';
+          recipientDetails = {
+            legalType: 'PRIVATE',
+            accountNumber: params.recipientBankAccount,
+            bankCode: params.recipientBankCode
+          };
+      }
+
       const recipient = await this.createRecipient({
         currency: params.targetCurrency,
-        type: 'sort_code', // This varies by country
+        type: recipientType,
         accountHolderName: params.recipientName,
-        details: {
-          legalType: 'PRIVATE',
-          accountNumber: params.recipientBankAccount,
-          bankCode: params.recipientBankCode
-        }
+        details: recipientDetails
       });
 
       // Step 3: Create transfer
       console.log('Creating transfer...');
+
       const transfer = await this.createTransfer({
         targetAccount: recipient.id,
         quoteUuid: quote.id,
-        customerTransactionId: `TXN-${Date.now()}`,
+        customerTransactionId: randomUUID(), // Proper UUID v4
         details: {
-          reference: params.reference || 'MyBambu Transfer'
+          reference: params.reference || 'MyBambu Transfer',
+          sourceOfFunds: 'verification.source.of.funds.other',
+          // Sender address (required in sandbox)
+          address: {
+            country: 'US',
+            postCode: '10001',
+            firstLine: '50 W 23rd St',
+            city: 'New York'
+          }
         }
       });
 
