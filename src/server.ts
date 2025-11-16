@@ -1,3 +1,7 @@
+import { config } from 'dotenv';
+// Load .env file (Railway env vars will override these)
+config();
+
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { URL } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
