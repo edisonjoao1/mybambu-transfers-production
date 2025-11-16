@@ -2,9 +2,18 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { existsSync } from 'node:fs';
 import { config } from 'dotenv';
 
+// DEBUG: Log all Wise-related env vars at startup
+console.log('🔍 DEBUG - Environment Variables at Startup:');
+console.log('  WISE_API_KEY:', process.env.WISE_API_KEY ? `SET (${process.env.WISE_API_KEY.substring(0, 8)}...)` : 'NOT SET');
+console.log('  WISE_PROFILE_ID:', process.env.WISE_PROFILE_ID || 'NOT SET');
+console.log('  WISE_API_URL:', process.env.WISE_API_URL || 'NOT SET');
+console.log('  NODE_ENV:', process.env.NODE_ENV || 'NOT SET');
+console.log('  .env file exists:', existsSync('.env'));
+
 // Only load .env file if it exists (for local development)
 // Railway/Render provide env vars natively - no .env file needed
 if (existsSync('.env')) {
+  console.log('  Loading .env file...');
   config();
 }
 import { URL } from "node:url";
