@@ -229,147 +229,173 @@ function getTransferReceiptComponent(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       min-height: 100vh;
-      color: #333;
+      color: #0D1752;
     }
     .receipt {
       background: white;
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 500px;
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 520px;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      animation: slideUp 0.4s ease-out;
+      box-shadow: 0 24px 72px rgba(24, 99, 220, 0.15);
+      animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .header {
       text-align: center;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #f4f4f4;
     }
     .mybambu-logo {
-      font-size: 24px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1863DC;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
     .status {
       display: inline-block;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: 12px;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 16px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
     }
-    .status-pending { background: #fff3cd; color: #856404; }
-    .status-processing { background: #cfe2ff; color: #084298; }
-    .status-completed { background: #d1e7dd; color: #0f5132; }
+    .status-pending { background: #FFF3CD; color: #856404; }
+    .status-processing { background: #D1E7FE; color: #1863DC; }
+    .status-completed { background: #D1F4E0; color: #17CA60; }
     .amount-section {
       text-align: center;
-      padding: 32px 0;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-      border-radius: 16px;
-      margin: 20px 0;
+      padding: 40px 0;
+      background: linear-gradient(135deg, rgba(24, 99, 220, 0.08) 0%, rgba(23, 202, 96, 0.08) 100%);
+      border-radius: 20px;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .amount-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(23, 202, 96, 0.1) 0%, transparent 70%);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
     }
     .amount {
-      font-size: 52px;
+      font-size: 56px;
       font-weight: 800;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.2;
+      color: #1863DC;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
     }
-    .currency { font-size: 24px; color: #666; font-weight: 600; margin-top: 4px; }
+    .currency {
+      font-size: 20px;
+      color: #17CA60;
+      font-weight: 700;
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+    }
     .details {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
+      background: #F8F9FA;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 24px 0;
     }
     .detail-row {
       display: flex;
       justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #e0e0e0;
+      padding: 14px 0;
+      border-bottom: 1px solid #E8EAED;
       align-items: center;
     }
     .detail-row:last-child { border-bottom: none; }
-    .label { color: #666; font-size: 14px; }
-    .value { font-weight: 600; color: #333; text-align: right; }
+    .label { color: #6B7280; font-size: 15px; font-weight: 600; }
+    .value { font-weight: 700; color: #0D1752; text-align: right; font-size: 15px; }
     .recipient {
       text-align: center;
-      padding: 24px;
-      font-size: 18px;
-      color: #333;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-      border-radius: 12px;
-      margin: 20px 0;
+      padding: 28px;
+      background: linear-gradient(135deg, #F8FBFF 0%, #F0F9FF 100%);
+      border-radius: 16px;
+      margin: 24px 0;
+      border: 2px solid #E8F2FE;
     }
     .recipient-name {
-      font-size: 22px;
-      font-weight: 700;
-      margin: 8px 0;
-      color: #667eea;
+      font-size: 24px;
+      font-weight: 800;
+      margin: 10px 0;
+      color: #1863DC;
+      letter-spacing: -0.5px;
     }
     .transfer-id {
       text-align: center;
-      color: #999;
+      color: #9CA3AF;
       font-size: 11px;
-      margin-top: 20px;
+      margin-top: 24px;
       font-family: 'Courier New', monospace;
-      padding: 12px;
-      background: #f8f9fa;
-      border-radius: 8px;
+      padding: 14px;
+      background: #F8F9FA;
+      border-radius: 10px;
+      font-weight: 600;
     }
     .actions {
-      margin-top: 24px;
+      margin-top: 28px;
       display: flex;
       gap: 12px;
     }
     button {
       flex: 1;
-      padding: 14px 20px;
+      padding: 16px 24px;
       border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Nunito', sans-serif;
     }
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #1863DC;
       color: white;
     }
     .btn-primary:hover {
+      background: #296BFF;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 12px 24px rgba(24, 99, 220, 0.3);
     }
     .btn-secondary {
-      background: #f8f9fa;
-      color: #333;
-      border: 2px solid #e0e0e0;
+      background: white;
+      color: #1863DC;
+      border: 2px solid #1863DC;
     }
     .btn-secondary:hover {
-      background: #e9ecef;
+      background: #F8FBFF;
+      transform: translateY(-2px);
     }
     @media (max-width: 480px) {
       body { padding: 12px; }
-      .receipt { padding: 20px; }
-      .amount { font-size: 42px; }
+      .receipt { padding: 24px; border-radius: 20px; }
+      .amount { font-size: 44px; }
+      .mybambu-logo { font-size: 24px; }
     }
   </style>
 </head>
@@ -1281,99 +1307,145 @@ function getRateComparisonComponent(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #17CA60 100%);
       min-height: 100vh;
     }
     .container {
       background: white;
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 700px;
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 720px;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 24px 72px rgba(24, 99, 220, 0.2);
+      animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .header {
       text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #f0f0f0;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #f4f4f4;
     }
     .mybambu-logo {
-      font-size: 20px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1863DC;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
     h1 {
-      font-size: 24px;
-      color: #333;
+      font-size: 26px;
+      color: #0D1752;
       margin-bottom: 4px;
+      font-weight: 800;
     }
     .winner-card {
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       color: white;
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 30px rgba(17, 153, 142, 0.3);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 28px;
+      box-shadow: 0 16px 40px rgba(24, 99, 220, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .winner-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(10%, 10%); }
     }
     .winner-badge {
-      font-size: 32px;
-      margin-bottom: 8px;
+      font-size: 40px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
     }
     .winner-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .winner-amount {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 4px;
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -1px;
     }
     .winner-fee {
       font-size: 14px;
       opacity: 0.9;
+      position: relative;
+      z-index: 1;
+      font-weight: 600;
     }
     .competitor-card {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-      border: 2px solid #e0e0e0;
+      background: #F8F9FA;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+      border: 2px solid #E8EAED;
+      transition: all 0.3s ease;
+    }
+    .competitor-card:hover {
+      border-color: #1863DC;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(24, 99, 220, 0.1);
     }
     .competitor-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .competitor-name {
-      font-weight: 600;
-      font-size: 16px;
-      color: #333;
+      font-weight: 700;
+      font-size: 17px;
+      color: #0D1752;
     }
     .competitor-amount {
-      font-size: 18px;
-      font-weight: 600;
-      color: #666;
+      font-size: 19px;
+      font-weight: 700;
+      color: #6B7280;
     }
     .savings-badge {
-      background: #38ef7d;
+      background: linear-gradient(135deg, #17CA60 0%, #0FB54A 100%);
       color: white;
-      padding: 6px 12px;
-      border-radius: 20px;
+      padding: 8px 16px;
+      border-radius: 24px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       display: inline-block;
-      margin-top: 8px;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(23, 202, 96, 0.3);
+    }
+    .subtitle {
+      color: #6B7280;
+      font-size: 15px;
+      font-weight: 600;
     }
   </style>
 </head>
