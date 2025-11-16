@@ -2075,7 +2075,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
     tools: [
       {
         name: "send_money",
-        description: "Use this WHENEVER the user wants to send money, transfer money, wire money, remit money, pay someone, or send funds to anyone in another country. This is the PRIMARY money transfer tool for MyBambu. Captures ANY phrases like: 'send money', 'transfer funds', 'pay someone abroad', 'wire money', 'send cash', 'remit to family', 'send dollars to', 'pay my family in [country]', 'help me send money', or any variation of sending/transferring money internationally. Supports 46 countries worldwide across all continents. Low fees starting at $0.85 with delivery as fast as 35 minutes. ALWAYS use this tool when money transfer intent is detected.",
+        description: "Use this WHENEVER the user wants to send money, transfer money, wire money, remit money, pay someone, or send funds to anyone in another country. This is the PRIMARY money transfer tool for MyBambu. Captures ANY phrases like: 'send money', 'transfer funds', 'pay someone abroad', 'wire money', 'send cash', 'remit to family', 'send dollars to', 'pay my family in [country]', 'help me send money', or any variation of sending/transferring money internationally. Supports 46 countries worldwide across all continents. Low fees starting at $0.85 with delivery as fast as 35 minutes. ALWAYS use this tool when money transfer intent is detected. IMPORTANT: If the tool asks for bank details and the user provides them, you MUST call this tool again with the bank_details parameter to complete the transfer.",
         inputSchema: {
           type: "object",
           properties: {
@@ -2522,9 +2522,9 @@ User requests like "Can you keep a running list..." mean "show me what's already
             return {
               content: [{
                 type: "text",
-                text: `📝 To complete this transfer to ${corridor.country}, I need the recipient's bank details:\n\n${requirements.instructions}\n\n**Required fields:**\n${requirements.fields.map(f => `• ${f.label}: ${f.description} (Example: ${f.example})`).join('\n')}\n\nPlease provide these details and I'll process the transfer.`
+                text: `📝 To complete this $${amount} transfer to ${recipient_name} in ${corridor.country}, I need their bank details:\n\n${requirements.instructions}\n\n**Required fields:**\n${requirements.fields.map(f => `• **${f.label}**: ${f.description}\n  Example: ${f.example}`).join('\n\n')}\n\n**Once you provide these details, I'll immediately process the transfer.**\n\n⚠️ IMPORTANT: After receiving the bank details, you MUST call the send_money tool again with the bank_details parameter. Example:\n\`\`\`json\n{\n  "amount": ${amount},\n  "to_country": "${corridor.country}",\n  "recipient_name": "${recipient_name}",\n  "bank_details": ${JSON.stringify(requirements.fields.reduce((acc, f) => ({ ...acc, [f.name]: f.example }), {}), null, 2)}\n}\n\`\`\``
               }],
-              isError: false
+              isError: true
             };
           }
         }
