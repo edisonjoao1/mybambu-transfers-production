@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { URL } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -12,6 +13,7 @@ import {
   type CallToolRequest,
   type ListToolsRequest,
 } from "@modelcontextprotocol/sdk/types.js";
+import { initializeWiseService, getWiseService } from './services/wise.js';
 
 // Real-time exchange rates cache
 let exchangeRatesCache: any = null;
@@ -2544,32 +2546,114 @@ User requests like "Can you keep a running list..." mean "show me what's already
       const recipientAmount = netAmount * rate;
       const transferId = `TXN-${transferCounter++}`;
 
-      // Simulate MyBambu API call
-      const mybambuResponse = simulateMyBambuTransfer({
-        amount,
-        to_country,
-        recipient_name,
-        currency: corridor.currency
-      });
+      let mybambuResponse;
+      let transfer;
 
-      // Create transfer record
-      const transfer = {
-        id: transferId,
-        mybambu_id: mybambuResponse.mybambuTransferId,
-        from_currency: 'USD',
-        to_currency: corridor.currency,
-        amount,
-        fee: feeAmount,
-        net_amount: netAmount,
-        exchange_rate: rate,
-        recipient_amount: recipientAmount,
-        recipient_name,
-        recipient_country: corridor.country,
-        delivery_time: corridor.deliveryTime,
-        status: mybambuResponse.status,
-        estimated_arrival: mybambuResponse.estimatedDelivery,
-        created_at: new Date().toISOString(),
-      };
+      // Use REAL Wise API if configured, otherwise simulate
+      if (useRealAPI) {
+        try {
+          console.log(`💸 Processing REAL transfer via Wise API...`);
+          const wiseService = getWiseService();
+
+          const wiseResult = await wiseService.sendMoney({
+            amount: netAmount, // Send net amount (after fees)
+            recipientName: recipient_name,
+            recipientCountry: corridor.country,
+            recipientBankAccount: '1234567890', // TODO: Get from user
+            recipientBankCode: 'BANK001', // TODO: Get from user
+            targetCurrency: corridor.currency,
+            reference: `MyBambu transfer to ${recipient_name}`
+          });
+
+          // Create transfer record with REAL Wise data
+          transfer = {
+            id: transferId,
+            wise_transfer_id: wiseResult.transferId,
+            mybambu_id: `WISE-${wiseResult.transferId}`,
+            from_currency: 'USD',
+            to_currency: corridor.currency,
+            amount,
+            fee: feeAmount,
+            net_amount: netAmount,
+            exchange_rate: wiseResult.rate,
+            recipient_amount: wiseResult.targetAmount,
+            recipient_name,
+            recipient_country: corridor.country,
+            delivery_time: corridor.deliveryTime,
+            status: wiseResult.status === 'processing' ? 'processing' : 'completed',
+            estimated_arrival: wiseResult.estimatedDelivery || new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+            created_at: new Date().toISOString(),
+            is_real_transfer: true
+          };
+
+          mybambuResponse = {
+            success: true,
+            mybambuTransferId: transfer.mybambu_id,
+            status: transfer.status,
+            estimatedDelivery: transfer.estimated_arrival,
+            message: 'Real transfer processed via Wise API'
+          };
+
+          console.log(`✅ REAL transfer created: ${wiseResult.transferId}`);
+        } catch (error: any) {
+          console.error(`❌ Wise API error:`, error.message);
+          // Fall back to simulation if Wise API fails
+          mybambuResponse = simulateMyBambuTransfer({
+            amount,
+            to_country,
+            recipient_name,
+            currency: corridor.currency
+          });
+
+          transfer = {
+            id: transferId,
+            mybambu_id: mybambuResponse.mybambuTransferId,
+            from_currency: 'USD',
+            to_currency: corridor.currency,
+            amount,
+            fee: feeAmount,
+            net_amount: netAmount,
+            exchange_rate: rate,
+            recipient_amount: recipientAmount,
+            recipient_name,
+            recipient_country: corridor.country,
+            delivery_time: corridor.deliveryTime,
+            status: mybambuResponse.status,
+            estimated_arrival: mybambuResponse.estimatedDelivery,
+            created_at: new Date().toISOString(),
+            is_real_transfer: false,
+            error_note: `Wise API failed: ${error.message}. Using simulation.`
+          };
+        }
+      } else {
+        // DEMO MODE: Simulate transfer
+        console.log(`🎭 Processing DEMO transfer (simulated)...`);
+        mybambuResponse = simulateMyBambuTransfer({
+          amount,
+          to_country,
+          recipient_name,
+          currency: corridor.currency
+        });
+
+        transfer = {
+          id: transferId,
+          mybambu_id: mybambuResponse.mybambuTransferId,
+          from_currency: 'USD',
+          to_currency: corridor.currency,
+          amount,
+          fee: feeAmount,
+          net_amount: netAmount,
+          exchange_rate: rate,
+          recipient_amount: recipientAmount,
+          recipient_name,
+          recipient_country: corridor.country,
+          delivery_time: corridor.deliveryTime,
+          status: mybambuResponse.status,
+          estimated_arrival: mybambuResponse.estimatedDelivery,
+          created_at: new Date().toISOString(),
+          is_real_transfer: false
+        };
+      }
 
       transfers.set(transferId, transfer);
 
@@ -3536,9 +3620,28 @@ httpServer.on("clientError", (err: Error, socket) => {
   socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
 });
 
+// Initialize Wise service if API keys are provided
+const useRealAPI = process.env.WISE_API_KEY && process.env.WISE_PROFILE_ID;
+if (useRealAPI) {
+  try {
+    initializeWiseService({
+      apiKey: process.env.WISE_API_KEY!,
+      profileId: process.env.WISE_PROFILE_ID!,
+      apiUrl: process.env.WISE_API_URL || 'https://api.wise.com'
+    });
+    console.log('✅ Wise API initialized - REAL payments enabled');
+  } catch (error) {
+    console.error('❌ Failed to initialize Wise API:', error);
+    console.log('⚠️  Falling back to demo mode');
+  }
+} else {
+  console.log('⚠️  Running in DEMO mode (no Wise API keys found)');
+  console.log('   Set WISE_API_KEY and WISE_PROFILE_ID for real payments');
+}
+
 httpServer.listen(port, () => {
   console.log(`\n🚀 MyBambu Transfers - MCP Server Ready!`);
-  console.log(`   Version: 1.0.0`);
+  console.log(`   Version: 1.0.0 ${useRealAPI ? '(PRODUCTION - REAL APIs)' : '(DEMO MODE)'}`);
   console.log(`   Port: ${port}`);
   console.log(`   SSE Endpoint: http://localhost:${port}${ssePath}`);
   console.log(`   POST Endpoint: http://localhost:${port}${postPath}?sessionId=...`);
@@ -3549,6 +3652,12 @@ httpServer.listen(port, () => {
   console.log(`   • Transfer status tracking`);
   console.log(`   • Transfer history`);
   console.log(`   • Interactive widgets with window.openai`);
+  if (!useRealAPI) {
+    console.log(`\n⚠️  DEMO MODE: Transfers are simulated`);
+    console.log(`   To enable real payments, create .env file with:`);
+    console.log(`   WISE_API_KEY=your_key_here`);
+    console.log(`   WISE_PROFILE_ID=your_profile_id_here`);
+  }
   console.log(`\n🔗 To expose publicly: npx ngrok http ${port}`);
   console.log(`   or use: npx localtunnel --port ${port}\n`);
 });
