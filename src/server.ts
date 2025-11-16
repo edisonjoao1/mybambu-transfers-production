@@ -1,7 +1,6 @@
 import { config } from 'dotenv';
-// Only load .env file locally (Railway provides env vars natively)
-// Skip dotenv if we're on Railway (detected by PORT being set by Railway)
-if (!process.env.RAILWAY_ENVIRONMENT && !process.env.RAILWAY_PUBLIC_DOMAIN) {
+// Only load .env file locally (skip in production - Railway/Render provide env vars natively)
+if (process.env.NODE_ENV !== 'production') {
   config();
 }
 
