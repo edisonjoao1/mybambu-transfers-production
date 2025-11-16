@@ -1,6 +1,9 @@
 import { config } from 'dotenv';
-// Load .env file (Railway env vars will override these)
-config();
+// Only load .env file locally (Railway provides env vars natively)
+// Skip dotenv if we're on Railway (detected by PORT being set by Railway)
+if (!process.env.RAILWAY_ENVIRONMENT && !process.env.RAILWAY_PUBLIC_DOMAIN) {
+  config();
+}
 
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { URL } from "node:url";
