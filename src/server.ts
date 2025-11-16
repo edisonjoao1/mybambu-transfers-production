@@ -3545,7 +3545,8 @@ const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse
       endpoints: {
         sse: ssePath,
         post: postPath,
-        health: "/health"
+        health: "/health",
+        debug: "/debug-env"
       },
       features: [
         "Send money to 46 countries",
@@ -3554,6 +3555,22 @@ const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse
         "Scheduled transfers",
         "Interactive widgets"
       ]
+    }));
+    return;
+  }
+
+  // Debug endpoint to check environment variables
+  if (req.method === "GET" && url.pathname === "/debug-env") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      hasWiseApiKey: !!process.env.WISE_API_KEY,
+      hasProfileId: !!process.env.WISE_PROFILE_ID,
+      hasApiUrl: !!process.env.WISE_API_URL,
+      wiseApiKeyLength: process.env.WISE_API_KEY?.length || 0,
+      profileId: process.env.WISE_PROFILE_ID || 'not set',
+      apiUrl: process.env.WISE_API_URL || 'not set',
+      nodeEnv: process.env.NODE_ENV,
+      allEnvKeys: Object.keys(process.env).filter(k => k.startsWith('WISE'))
     }));
     return;
   }
