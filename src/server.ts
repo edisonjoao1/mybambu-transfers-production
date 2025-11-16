@@ -513,51 +513,51 @@ function getExchangeRateComponent(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       min-height: 100vh;
     }
     .rate-card {
       background: white;
-      border-radius: 20px;
-      padding: 32px;
-      max-width: 420px;
+      border-radius: 24px;
+      padding: 36px;
+      max-width: 460px;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      animation: fadeIn 0.4s ease-out;
+      box-shadow: 0 24px 72px rgba(24, 99, 220, 0.2);
+      animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
+      from { opacity: 0; transform: scale(0.96); }
       to { opacity: 1; transform: scale(1); }
     }
     .mybambu-logo {
-      font-size: 18px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 24px;
+      font-weight: 800;
+      color: #1863DC;
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
     .title {
       text-align: center;
-      color: #333;
-      margin-bottom: 28px;
-      font-size: 18px;
-      font-weight: 600;
+      color: #0D1752;
+      margin-bottom: 32px;
+      font-size: 20px;
+      font-weight: 700;
     }
     .rate-display {
       text-align: center;
-      padding: 36px 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 16px;
+      padding: 40px 28px;
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
+      border-radius: 20px;
       color: white;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 16px 40px rgba(24, 99, 220, 0.25);
     }
     .rate-display::before {
       content: '';
@@ -566,81 +566,95 @@ function getExchangeRateComponent(): string {
       right: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-      animation: pulse 3s ease-in-out infinite;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
     }
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.5; }
-      50% { transform: scale(1.1); opacity: 0.8; }
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.4; }
+      50% { transform: scale(1.15) rotate(45deg); opacity: 0.7; }
     }
     .currencies {
-      font-size: 22px;
+      font-size: 20px;
       opacity: 0.95;
-      font-weight: 600;
+      font-weight: 700;
       position: relative;
       z-index: 1;
     }
     .rate-value {
-      font-size: 64px;
+      font-size: 68px;
       font-weight: 800;
-      margin: 20px 0;
+      margin: 24px 0;
       position: relative;
       z-index: 1;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      text-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      letter-spacing: -2px;
     }
     .arrow {
-      font-size: 28px;
-      margin: 12px 0;
+      font-size: 32px;
+      margin: 16px 0;
       opacity: 0.9;
+      position: relative;
+      z-index: 1;
     }
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 24px;
+      gap: 14px;
+      margin-top: 28px;
     }
     .info-box {
-      background: #f8f9fa;
-      padding: 16px;
-      border-radius: 12px;
+      background: #F8F9FA;
+      padding: 18px;
+      border-radius: 14px;
       text-align: center;
+      border: 2px solid #F0F0F0;
+      transition: all 0.3s ease;
+    }
+    .info-box:hover {
+      border-color: #1863DC;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(24, 99, 220, 0.1);
     }
     .info-label {
-      font-size: 12px;
-      color: #666;
-      margin-bottom: 6px;
+      font-size: 11px;
+      color: #6B7280;
+      margin-bottom: 8px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
+      font-weight: 700;
     }
     .info-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: #333;
+      font-size: 17px;
+      font-weight: 800;
+      color: #0D1752;
     }
     .timestamp {
       text-align: center;
-      color: #999;
+      color: #9CA3AF;
       font-size: 12px;
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid #e0e0e0;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 2px solid #F0F0F0;
+      font-weight: 600;
     }
     button {
       width: 100%;
-      padding: 14px;
-      margin-top: 20px;
+      padding: 16px;
+      margin-top: 24px;
       border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      background: #1863DC;
       color: white;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Nunito', sans-serif;
     }
     button:hover {
+      background: #296BFF;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 12px 28px rgba(24, 99, 220, 0.3);
     }
   </style>
 </head>
@@ -1513,95 +1527,136 @@ function getSpendingAnalyticsComponent(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #17CA60 100%);
       min-height: 100vh;
     }
     .container {
       background: white;
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 700px;
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 740px;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 24px 72px rgba(24, 99, 220, 0.2);
+      animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .header {
       text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #f0f0f0;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #f4f4f4;
     }
     .mybambu-logo {
-      font-size: 20px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1863DC;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
     h1 {
-      font-size: 24px;
-      color: #333;
+      font-size: 26px;
+      color: #0D1752;
       margin-bottom: 4px;
+      font-weight: 800;
     }
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
+      gap: 14px;
+      margin-bottom: 28px;
     }
     .stat-card {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      background: linear-gradient(135deg, #1863DC 0%, #296BFF 100%);
       color: white;
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 24px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(24, 99, 220, 0.15);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 150%;
+      height: 150%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
     }
     .stat-label {
-      font-size: 12px;
+      font-size: 11px;
       opacity: 0.9;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
     }
     .stat-value {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -1px;
     }
     .breakdown-section {
-      margin-top: 24px;
+      margin-top: 28px;
     }
     .section-title {
       font-size: 18px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 12px;
+      font-weight: 800;
+      color: #0D1752;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .breakdown-item {
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: #F8F9FA;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 2px solid #F0F0F0;
+      transition: all 0.3s ease;
+    }
+    .breakdown-item:hover {
+      border-color: #1863DC;
+      transform: translateX(4px);
+      box-shadow: 0 8px 20px rgba(24, 99, 220, 0.1);
     }
     .breakdown-label {
-      font-weight: 500;
-      color: #333;
+      font-weight: 700;
+      color: #0D1752;
+      font-size: 15px;
+      margin-bottom: 8px;
     }
     .breakdown-amount {
-      font-weight: 600;
-      color: #f5576c;
+      font-weight: 800;
+      color: #17CA60;
+      font-size: 18px;
     }
     .breakdown-bar {
-      height: 6px;
-      background: linear-gradient(to right, #f093fb, #f5576c);
-      border-radius: 3px;
-      margin-top: 6px;
-      transition: width 0.5s ease;
+      height: 8px;
+      background: linear-gradient(to right, #1863DC, #17CA60);
+      border-radius: 4px;
+      margin-top: 10px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(24, 99, 220, 0.2);
+    }
+    .subtitle {
+      color: #6B7280;
+      font-size: 15px;
+      font-weight: 600;
     }
   </style>
 </head>
