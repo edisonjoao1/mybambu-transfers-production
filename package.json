@@ -1,7 +1,7 @@
 {
-  "name": "mybambu-chatgpt-transfers",
+  "name": "mybambu-transfers-production",
   "version": "1.0.0",
-  "description": "Production-ready MCP server for international money transfers through ChatGPT. Send money globally with low fees, live exchange rates, and beautiful interactive widgets.",
+  "description": "Production MyBambu MCP server with REAL payment APIs - international money transfers through ChatGPT with Wise, Plaid, and real banking integrations.",
   "type": "module",
   "main": "./src/server.ts",
   "keywords": [
@@ -13,7 +13,10 @@
     "mybambu",
     "international-payments",
     "exchange-rates",
-    "openai-apps-sdk"
+    "openai-apps-sdk",
+    "wise-api",
+    "plaid",
+    "production"
   ],
   "author": {
     "name": "Edison Espinosa",
@@ -21,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edisonjoao1/chatgpt-transfers.git"
+    "url": "git+https://github.com/edisonjoao1/mybambu-transfers-production.git"
   },
   "bugs": {
-    "url": "https://github.com/edisonjoao1/chatgpt-transfers/issues"
+    "url": "https://github.com/edisonjoao1/mybambu-transfers-production/issues"
   },
-  "homepage": "https://github.com/edisonjoao1/chatgpt-transfers#readme",
+  "homepage": "https://github.com/edisonjoao1/mybambu-transfers-production#readme",
   "license": "MIT",
   "engines": {
     "node": ">=20.0.0",

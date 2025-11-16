@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: mybambu-chatgpt-transfers
+    name: mybambu-transfers-production
     runtime: node
     plan: free
     region: oregon
@@ -15,3 +15,10 @@ services:
         value: production
       - key: PORT
         value: 8000
+      # Add production API keys here:
+      # - key: WISE_API_KEY
+      #   sync: false
+      # - key: PLAID_CLIENT_ID
+      #   sync: false
+      # - key: DATABASE_URL
+      #   sync: false

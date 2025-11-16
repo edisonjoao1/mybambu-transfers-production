@@ -1,8 +1,21 @@
-# MyBambu Transfers - ChatGPT App
+# MyBambu Transfers - PRODUCTION VERSION
 
-> **Send money to Latin America directly through ChatGPT** 💸
+> **⚠️ This is the PRODUCTION version with REAL payment APIs**
+>
+> For the demo version with simulated transfers, see: [chatgpt-transfers](https://github.com/edisonjoao1/chatgpt-transfers)
 
-A production-ready MCP (Model Context Protocol) server that enables international money transfers through ChatGPT. Built following OpenAI Apps SDK best practices with interactive widgets, real-time exchange rates, and a beautiful UI.
+**Send money to Latin America directly through ChatGPT with real banking APIs** 💸
+
+A production MCP (Model Context Protocol) server that enables **real international money transfers** through ChatGPT using Wise API, Plaid, and other payment providers. Built following OpenAI Apps SDK best practices with interactive widgets, real-time exchange rates, and production-grade security.
+
+## 📖 Integration Guide
+
+**See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for complete setup instructions** including:
+- Wise API integration
+- Payment provider setup (Plaid, dLocal, Currencycloud)
+- Database configuration
+- KYC/AML compliance
+- Security best practices
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![MCP SDK](https://img.shields.io/badge/MCP_SDK-1.0.4-green)](https://github.com/modelcontextprotocol)
