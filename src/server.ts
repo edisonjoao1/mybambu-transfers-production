@@ -2093,7 +2093,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
             },
             bank_details: {
               type: "object",
-              description: "Optional: Recipient's bank account details. Required fields vary by country (e.g., CLABE for Mexico, IBAN for Europe, Sort Code + Account Number for UK). If not provided, you'll be told what's needed.",
+              description: "Optional: Recipient's bank account details. Required fields vary by country (e.g., CLABE for Mexico, IBAN for Europe, Sort Code + Account Number for UK, Account Number + Phone + Address for Colombia). If not provided, you'll be told what's needed.",
               properties: {
                 clabe: { type: "string", description: "Mexican CLABE number (18 digits)" },
                 iban: { type: "string", description: "European IBAN" },
@@ -2101,7 +2101,11 @@ User requests like "Can you keep a running list..." mean "show me what's already
                 accountNumber: { type: "string", description: "Bank account number" },
                 cpf: { type: "string", description: "Brazilian CPF (11 digits)" },
                 bankCode: { type: "string", description: "Bank code" },
-                accountType: { type: "string", description: "checking or savings" }
+                accountType: { type: "string", description: "CURRENT (checking) or SAVINGS" },
+                phoneNumber: { type: "string", description: "Recipient's phone number (for Colombia)" },
+                address: { type: "string", description: "Street address (for Colombia)" },
+                city: { type: "string", description: "City (for Colombia)" },
+                postCode: { type: "string", description: "Postal code (for Colombia)" }
               }
             },
           },
@@ -2565,6 +2569,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
           // Prepare bank account details based on currency
           let recipientBankAccount = '';
           let recipientBankCode = '';
+          let extraFields: any = {};
 
           // Extract the right fields based on currency
           switch (corridor.currency) {
@@ -2582,6 +2587,16 @@ User requests like "Can you keep a running list..." mean "show me what's already
             case 'EUR':
               recipientBankAccount = bank_details.iban || '';
               break;
+            case 'COP':
+              recipientBankAccount = bank_details.accountNumber || '';
+              extraFields = {
+                accountType: bank_details.accountType || 'SAVINGS',
+                phoneNumber: bank_details.phoneNumber,
+                address: bank_details.address,
+                city: bank_details.city,
+                postCode: bank_details.postCode
+              };
+              break;
             default:
               recipientBankAccount = bank_details.accountNumber || '';
               recipientBankCode = bank_details.bankCode || '';
@@ -2594,7 +2609,8 @@ User requests like "Can you keep a running list..." mean "show me what's already
             recipientBankAccount,
             recipientBankCode,
             targetCurrency: corridor.currency,
-            reference: `MyBambu transfer to ${recipient_name}`
+            reference: `MyBambu transfer to ${recipient_name}`,
+            ...extraFields
           });
 
           // Create transfer record with REAL Wise data

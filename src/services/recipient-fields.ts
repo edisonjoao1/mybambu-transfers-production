@@ -116,6 +116,58 @@ export const COUNTRY_BANK_REQUIREMENTS: Record<string, CountryBankRequirements> 
     instructions: 'For European transfers, we need the recipient\'s IBAN (International Bank Account Number). This can be found on their bank statement.'
   },
 
+  // Colombia
+  'COP': {
+    country: 'Colombia',
+    currency: 'COP',
+    accountType: 'colombia',
+    fields: [
+      {
+        name: 'accountNumber',
+        label: 'Account Number',
+        description: 'Bank account number (4-20 characters)',
+        required: true,
+        example: '00012345678'
+      },
+      {
+        name: 'accountType',
+        label: 'Account Type',
+        description: 'CURRENT (checking) or SAVINGS',
+        required: true,
+        example: 'SAVINGS'
+      },
+      {
+        name: 'phoneNumber',
+        label: 'Phone Number',
+        description: 'Colombian phone number (7-20 digits)',
+        required: true,
+        example: '3001234567'
+      },
+      {
+        name: 'city',
+        label: 'City',
+        description: 'City where recipient lives',
+        required: true,
+        example: 'Bogotá'
+      },
+      {
+        name: 'address',
+        label: 'Street Address',
+        description: 'Recipient\'s street address',
+        required: true,
+        example: 'Calle 123 #45-67'
+      },
+      {
+        name: 'postCode',
+        label: 'Post Code',
+        description: 'Postal code',
+        required: true,
+        example: '110111'
+      }
+    ],
+    instructions: 'For Colombia, we need the recipient\'s bank account number, account type (CURRENT for checking or SAVINGS), phone number, and complete address (city, street address, and postal code). Note: In Wise sandbox, only Bancolombia bank is supported for testing.'
+  },
+
   // Add more countries as needed...
 };
 

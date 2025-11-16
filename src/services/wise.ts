@@ -174,6 +174,11 @@ export class WiseService {
     recipientBankCode?: string;
     targetCurrency: string;
     reference?: string;
+    phoneNumber?: string;
+    address?: string;
+    city?: string;
+    postCode?: string;
+    accountType?: string;
   }) {
     try {
       // Step 1: Create quote
@@ -225,6 +230,23 @@ export class WiseService {
           recipientDetails = {
             legalType: 'PRIVATE',
             iban: params.recipientBankAccount || 'DE89370400440532013000'
+          };
+          break;
+
+        case 'COP': // Colombia
+          recipientType = 'colombia';
+          recipientDetails = {
+            legalType: 'PRIVATE',
+            bankCode: 'COLOCOBM', // Only Bancolombia supported in sandbox
+            accountNumber: params.recipientBankAccount,
+            accountType: params.accountType || 'SAVINGS',
+            phoneNumber: params.phoneNumber,
+            address: {
+              country: 'CO',
+              city: params.city,
+              firstLine: params.address,
+              postCode: params.postCode
+            }
           };
           break;
 
