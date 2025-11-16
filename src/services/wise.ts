@@ -27,9 +27,16 @@ interface RecipientRequest {
 interface TransferRequest {
   targetAccount: number;
   quoteUuid: string;
-  customerTransactionId: string;
+  customerTransactionId?: string;
   details?: {
     reference?: string;
+    sourceOfFunds?: string;
+    address?: {
+      country: string;
+      postCode: string;
+      firstLine: string;
+      city: string;
+    };
   };
 }
 

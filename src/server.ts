@@ -30,6 +30,7 @@ import {
   type ListToolsRequest,
 } from "@modelcontextprotocol/sdk/types.js";
 import { initializeWiseService, getWiseService } from './services/wise.js';
+import { getBankRequirements, validateBankDetails } from './services/recipient-fields.js';
 
 // Real-time exchange rates cache
 let exchangeRatesCache: any = null;
@@ -2090,6 +2091,19 @@ User requests like "Can you keep a running list..." mean "show me what's already
               type: "string",
               description: "Full name of the recipient"
             },
+            bank_details: {
+              type: "object",
+              description: "Optional: Recipient's bank account details. Required fields vary by country (e.g., CLABE for Mexico, IBAN for Europe, Sort Code + Account Number for UK). If not provided, you'll be told what's needed.",
+              properties: {
+                clabe: { type: "string", description: "Mexican CLABE number (18 digits)" },
+                iban: { type: "string", description: "European IBAN" },
+                sortCode: { type: "string", description: "UK sort code (6 digits)" },
+                accountNumber: { type: "string", description: "Bank account number" },
+                cpf: { type: "string", description: "Brazilian CPF (11 digits)" },
+                bankCode: { type: "string", description: "Bank code" },
+                accountType: { type: "string", description: "checking or savings" }
+              }
+            },
           },
           required: ["amount", "to_country", "recipient_name"],
         },
@@ -2448,6 +2462,7 @@ User requests like "Can you keep a running list..." mean "show me what's already
       const amount = rawArgs.amount;
       const to_country = rawArgs.to_country || rawArgs.recipient_country;
       const recipient_name = rawArgs.recipient_name;
+      const bank_details = rawArgs.bank_details || {};
 
       // Validation - Check required parameters
       if (!to_country || !recipient_name) {
@@ -2495,6 +2510,26 @@ User requests like "Can you keep a running list..." mean "show me what's already
         };
       }
 
+      // Check bank details for real API mode
+      if (useRealAPI) {
+        const requirements = getBankRequirements(corridor.currency);
+
+        if (requirements) {
+          const validation = validateBankDetails(corridor.currency, bank_details);
+
+          if (!validation.valid) {
+            // Tell user what bank details are needed
+            return {
+              content: [{
+                type: "text",
+                text: `📝 To complete this transfer to ${corridor.country}, I need the recipient's bank details:\n\n${requirements.instructions}\n\n**Required fields:**\n${requirements.fields.map(f => `• ${f.label}: ${f.description} (Example: ${f.example})`).join('\n')}\n\nPlease provide these details and I'll process the transfer.`
+              }],
+              isError: false
+            };
+          }
+        }
+      }
+
       // Get exchange rate
       const rateData = await fetchExchangeRates();
       const rate = rateData.rates[corridor.currency];
@@ -2527,12 +2562,37 @@ User requests like "Can you keep a running list..." mean "show me what's already
           console.log(`💸 Processing REAL transfer via Wise API...`);
           const wiseService = getWiseService();
 
+          // Prepare bank account details based on currency
+          let recipientBankAccount = '';
+          let recipientBankCode = '';
+
+          // Extract the right fields based on currency
+          switch (corridor.currency) {
+            case 'MXN':
+              recipientBankAccount = bank_details.clabe || '';
+              break;
+            case 'GBP':
+              recipientBankAccount = bank_details.accountNumber || '';
+              recipientBankCode = bank_details.sortCode || '';
+              break;
+            case 'BRL':
+              recipientBankAccount = bank_details.accountNumber || '';
+              recipientBankCode = bank_details.cpf || '';
+              break;
+            case 'EUR':
+              recipientBankAccount = bank_details.iban || '';
+              break;
+            default:
+              recipientBankAccount = bank_details.accountNumber || '';
+              recipientBankCode = bank_details.bankCode || '';
+          }
+
           const wiseResult = await wiseService.sendMoney({
             amount: netAmount, // Send net amount (after fees)
             recipientName: recipient_name,
             recipientCountry: corridor.country,
-            recipientBankAccount: '1234567890', // TODO: Get from user
-            recipientBankCode: 'BANK001', // TODO: Get from user
+            recipientBankAccount,
+            recipientBankCode,
             targetCurrency: corridor.currency,
             reference: `MyBambu transfer to ${recipient_name}`
           });
