@@ -78,18 +78,30 @@ export class WiseService {
    * Create a recipient
    */
   async createRecipient(request: RecipientRequest) {
+    const payload = {
+      currency: request.currency,
+      type: request.type,
+      profile: this.profileId,
+      accountHolderName: request.accountHolderName,
+      details: request.details
+    };
+
     try {
-      const response = await this.client.post('/v1/accounts', {
-        currency: request.currency,
-        type: request.type,
-        profile: this.profileId,
-        accountHolderName: request.accountHolderName,
-        details: request.details
-      });
+      console.error('🔍 Creating recipient with payload:', JSON.stringify(payload, null, 2));
+      const response = await this.client.post('/v1/accounts', payload);
+      console.error('✅ Recipient created:', response.data.id);
       return response.data;
     } catch (error: any) {
-      console.error('Wise Recipient Error:', error.response?.data || error.message);
-      throw new Error(`Failed to create recipient: ${error.response?.data?.message || error.message}`);
+      console.error('❌ Wise Recipient Error:');
+      console.error('Status:', error.response?.status);
+      console.error('Errors:', JSON.stringify(error.response?.data?.errors, null, 2));
+      console.error('Payload sent:', JSON.stringify(payload, null, 2));
+
+      // Include detailed error in thrown message
+      const errorDetails = error.response?.data?.errors
+        ? JSON.stringify(error.response.data.errors)
+        : error.message;
+      throw new Error(`Wise recipient creation failed: ${errorDetails}`);
     }
   }
 
@@ -175,6 +187,7 @@ export class WiseService {
     targetCurrency: string;
     reference?: string;
     phoneNumber?: string;
+    idDocumentNumber?: string;
     address?: string;
     city?: string;
     postCode?: string;
@@ -241,6 +254,8 @@ export class WiseService {
             accountNumber: params.recipientBankAccount,
             accountType: params.accountType || 'SAVINGS',
             phoneNumber: params.phoneNumber,
+            idDocumentType: 'CC', // Cédula de Ciudadanía (Colombian ID card)
+            idDocumentNumber: params.idDocumentNumber,
             address: {
               country: 'CO',
               city: params.city,
@@ -281,8 +296,23 @@ export class WiseService {
       });
 
       // Step 4: Fund transfer
-      console.log('Funding transfer...');
-      await this.fundTransfer(transfer.id);
+      // Note: Personal API tokens cannot fund transfers due to PSD2 regulations.
+      // The transfer is created and awaiting payment. In production with OAuth tokens,
+      // you would call fundTransfer() here.
+      console.log('Transfer created successfully. Funding requires OAuth token or manual action.');
+
+      // Try to fund, but don't fail if it returns 403
+      try {
+        await this.fundTransfer(transfer.id);
+        console.log('✅ Transfer funded successfully');
+      } catch (fundingError: any) {
+        if (fundingError.message.includes('403') || fundingError.message.includes('forbidden')) {
+          console.log('⚠️  Funding requires OAuth token (personal tokens cannot fund due to PSD2)');
+        } else {
+          // Re-throw other errors
+          throw fundingError;
+        }
+      }
 
       return {
         transferId: transfer.id,

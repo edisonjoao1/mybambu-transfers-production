@@ -144,6 +144,13 @@ export const COUNTRY_BANK_REQUIREMENTS: Record<string, CountryBankRequirements> 
         example: '3001234567'
       },
       {
+        name: 'idDocumentNumber',
+        label: 'Cédula Number',
+        description: 'Colombian national ID number (Cédula de Ciudadanía)',
+        required: true,
+        example: '1234567890'
+      },
+      {
         name: 'city',
         label: 'City',
         description: 'City where recipient lives',
@@ -165,7 +172,7 @@ export const COUNTRY_BANK_REQUIREMENTS: Record<string, CountryBankRequirements> 
         example: '110111'
       }
     ],
-    instructions: 'For Colombia, we need the recipient\'s bank account number, account type (CURRENT for checking or SAVINGS), phone number, and complete address (city, street address, and postal code). Note: In Wise sandbox, only Bancolombia bank is supported for testing.'
+    instructions: 'For Colombia, we need the recipient\'s bank account number, account type (CURRENT for checking or SAVINGS), phone number, Cédula number (Colombian national ID), and complete address (city, street address, and postal code). Note: In Wise sandbox, only Bancolombia bank is supported for testing.'
   },
 
   // Add more countries as needed...
